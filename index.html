@@ -1,18 +1,36 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>ChatGPT</title>
-</head>
-<body>
-    <script>
-        // 获取预设提示词
-        var prompt = "你的预设提示词";
+<!DOCTYPE html><html><head><title>Chat with GPT-3</title><metacharset="utf-8"><scriptsrc="https://chatgpt.com/chatgpt.js"></script><scriptsrc="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script></head><body><script>
+      axios.get("url.txt").then(function(response) {
+        varurls = response.data.split("\n").filter(function(url) {
+          returnurl.trim().length> 0;
+        });
+        varvalidUrls = [];
+        varpromises = urls.map(function(url) {
+          returnnewPromise(function(resolve, reject) {
+            varimg = newImage();
+            img.onload= function() {
+              validUrls.push(url);
+              resolve();
+            };
+            img.onerror= function() {
+              resolve();
+            };
+            img.src= url;
+          });
+        });
+        Promise.all(promises).then(function() {
+          if(validUrls.length=== 0) {
+            alert("没有可用的 chatgpt 镜像网址！");
+            return;
+          }
+          // 获取第一个可用的 URLvarvalidUrl = validUrls[0];
+          varpromptUrl = validUrl + "?prompt=";
+          axios.get("prompt.txt").then(function(response) {
+            varprompt = response.data;
+            varencodedPrompt = encodeURIComponent(prompt);
+            varurl = promptUrl + encodedPrompt;
+            chatgpt.open(url);
+          });
+        });
+      });
+    </script></body></html>
 
-        // 构建ChatGPT链接
-        var chatGPTUrl = "https://chat.openai.com/?prompt=" + encodeURIComponent(prompt);
-
-        // 在当前窗口打开ChatGPT链接
-        window.location.href = chatGPTUrl;
-    </script>
-</body>
-</html>
