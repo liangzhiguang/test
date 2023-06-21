@@ -1,36 +1,52 @@
-<!DOCTYPE html><html><head><title>Chat with GPT-3</title><metacharset="utf-8"><scriptsrc="https://chatgpt.com/chatgpt.js"></script><scriptsrc="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script></head><body><script>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chat with GPT-3</title>
+    <meta charset="utf-8" />
+    <script src="https://chatgpt.com/chatgpt.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <script>
       axios.get("url.txt").then(function(response) {
-        varurls = response.data.split("\n").filter(function(url) {
-          returnurl.trim().length> 0;
+        var urls = response.data.split("\n").filter(function(url) {
+          return url.trim().length > 0;
         });
-        varvalidUrls = [];
-        varpromises = urls.map(function(url) {
-          returnnewPromise(function(resolve, reject) {
-            varimg = newImage();
-            img.onload= function() {
+        var validUrls = [];
+        var promises = urls.map(function(url) {
+          return new Promise(function(resolve, reject) {
+            var img = new Image();
+            img.onload = function() {
               validUrls.push(url);
               resolve();
             };
-            img.onerror= function() {
+            img.onerror = function() {
               resolve();
             };
-            img.src= url;
+            img.src = url;
           });
         });
         Promise.all(promises).then(function() {
-          if(validUrls.length=== 0) {
+          if (validUrls.length === 0) {
             alert("没有可用的 chatgpt 镜像网址！");
             return;
           }
-          // 获取第一个可用的 URLvarvalidUrl = validUrls[0];
-          varpromptUrl = validUrl + "?prompt=";
+          // 获取第一个可用的 URL
+          var validUrl = validUrls[0];
+          var promptUrl = validUrl + "?prompt=";
           axios.get("prompt.txt").then(function(response) {
-            varprompt = response.data;
-            varencodedPrompt = encodeURIComponent(prompt);
-            varurl = promptUrl + encodedPrompt;
+            var prompt = response.data;
+            navigator.clipboard.writeText(prompt).then(function() {
+              console.log("提示词已复制到剪贴板");
+            }, function() {
+              console.log("无法复制提示词到剪贴板");
+            });
+            var encodedPrompt = encodeURIComponent(prompt);
+            var url = promptUrl + encodedPrompt;
             chatgpt.open(url);
           });
         });
       });
-    </script></body></html>
-
+    </script>
+  </body>
+</html>
