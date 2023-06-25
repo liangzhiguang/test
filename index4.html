@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>URL Checker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 table {
 border-collapse: collapse;
@@ -11,6 +12,7 @@ width: 100%;
 th, td {
 text-align: left;
 padding: 8px;
+font-size: 16px;
 }
 th {
 background-color: #4CAF50;
@@ -28,6 +30,7 @@ color: red;
 </style>
 </head>
 <body>
+<h1>URL Checker</h1>
 <table>
 <thead>
 <tr>
@@ -90,7 +93,6 @@ urlCell.appendChild(link);
 .finally(() => {
 row.appendChild(statusCell);
 tableBody.appendChild(row);
-});
 });
 setTimeout(() => {
 if (fastUrls.length > 0) {
