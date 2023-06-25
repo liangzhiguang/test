@@ -79,7 +79,8 @@
               const link = document.createElement('a');
               link.href = url;
               link.target = '_blank';
-              link.textContent = '测试';
+              link.textContent = url;
+              link.classList.add('red');
               urlCell.innerHTML = '';
               urlCell.appendChild(link);
             })
