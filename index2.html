@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Check ChatGPT Mirror Links</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #ddd;
+    }
+  </style>
+</head>
+<body>
+  <input type="file" id="fileInput">
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    fileInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.readAsText(file);
+      reader.onload = () => {
+        const fileContent = reader.result;
+        const urls = fileContent.split('\n').map(url => url.trim());
+        const table = document.createElement('table');
+        for (const url of urls) {
+          const row = table.insertRow();
+          const urlCell = row.insertCell();
+          urlCell.textContent = url;
+          const statusCell = row.insertCell();
+          fetch(url)
+            .then(response => {
+              if (response.ok) {
+                statusCell.textContent = 'OK';
+                statusCell.style.color = 'green';
+                urlCell.innerHTML = `<a href="${url}">${url}</a>`;
+              } else {
+                statusCell.textContent = response.status;
+                statusCell.style.color = 'red';
+                urlCell.innerHTML = `<a href="${url}" style="color: red;">${url}</a>`;
+              }
+            })
+            .catch(error => {
+              statusCell.textContent = 'Error';
+              statusCell.style.color = 'red';
+              urlCell.innerHTML = `<a href="${url}" style="color: red;">${url}</a>`;
+            });
+        }
+        document.body.appendChild(table);
+      };
+    });
+  </script>
+</body>
+</html>
