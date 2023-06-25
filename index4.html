@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>URL Checker</title>
+<style>
+table {
+border-collapse: collapse;
+width: 100%;
+}
+th, td {
+text-align: left;
+padding: 8px;
+}
+th {
+background-color: #4CAF50;
+color: white;
+}
+tr:nth-child(even) {
+background-color: #f2f2f2;
+}
+.green {
+color: green;
+}
+.red {
+color: red;
+}
+</style>
+</head>
+<body>
+<table>
+<thead>
+<tr>
+<th>URL</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="table-body">
+</tbody>
+</table>
+<script>
+fetch('url.txt')
+.then(response => response.text())
+.then(text => {
+const urls = text.split('\n');
+const tableBody = document.getElementById('table-body');
+const fastUrls = [];
+urls.forEach(url => {
+const row = document.createElement('tr');
+const urlCell = document.createElement('td');
+urlCell.textContent = url;
+row.appendChild(urlCell);
+const statusCell = document.createElement('td');
+fetch(url)
+.then(response => {
+if (response.ok) {
+statusCell.textContent = '响应快';
+statusCell.classList.add('green');
+const link = document.createElement('a');
+link.href = url;
+link.target = '_blank';
+link.textContent = url;
+link.classList.add('green');
+urlCell.innerHTML = '';
+urlCell.appendChild(link);
+fastUrls.push(url);
+} else {
+statusCell.textContent = '响应慢';
+statusCell.classList.add('red');
+const link = document.createElement('a');
+link.href = url;
+link.target = '_blank';
+link.textContent = url;
+link.classList.add('red');
+urlCell.innerHTML = '';
+urlCell.appendChild(link);
+}
+})
+.catch(error => {
+statusCell.textContent = '响应慢';
+statusCell.classList.add('red');
+const link = document.createElement('a');
+link.href = url;
+link.target = '_blank';
+link.textContent = url;
+link.classList.add('red');
+urlCell.innerHTML = '';
+urlCell.appendChild(link);
+})
+.finally(() => {
+row.appendChild(statusCell);
+tableBody.appendChild(row);
+});
+});
+setTimeout(() => {
+if (fastUrls.length > 0) {
+const randomIndex = Math.floor(Math.random() * fastUrls.length);
+window.location.href = fastUrls[randomIndex];
+}
+}, 5000); // Increase the delay to 5 seconds (5000 milliseconds)
+});
+</script>
+</body>
+</html>
