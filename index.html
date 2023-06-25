@@ -2,41 +2,76 @@
 <html>
   <head>
     <title>ChatGPT Mirror Sites</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th, td {
+        text-align: left;
+        padding: 8px;
+      }
+      th {
+        background-color: #4CAF50;
+        color: white;
+      }
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+      .ok {
+        color: green;
+      }
+      .error {
+        color: red;
+      }
+    </style>
   </head>
   <body>
     <h1>ChatGPT Mirror Sites</h1>
-    <ul id="urls"></ul>
-    <script>
-      // Read the URLs from the url.txt file
-      fetch("url.txt")
-        .then(response => response.text())
-        .then(text => {
-          const urls = text.trim().split("\n");
-          const ul = document.getElementById("urls");
-          urls.forEach(url => {
-            // Check if the URL is working
-            fetch(url)
-              .then(response => {
-                if (response.ok) {
-                  const li = document.createElement("li");
-                  const a = document.createElement("a");
-                  a.href = url;
-                  a.textContent = url;
-                  li.appendChild(a);
-                  li.appendChild(document.createTextNode(" - Working"));
-                  ul.appendChild(li);
-                } else {
-                  const li = document.createElement("li");
-                  const a = document.createElement("a");
-                  a.href = url;
-                  a.textContent = url;
-                  li.appendChild(a);
-                  li.appendChild(document.createTextNode(" - Not Working"));
-                  ul.appendChild(li);
-                }
+    <table>
+      <thead>
+        <tr>
+          <th>URL</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Read the URLs from the url.txt file -->
+        <script>
+          const urlFile = "url.txt";
+          const tableBody = document.querySelector("tbody");
+          fetch(urlFile)
+            .then(response => response.text())
+            .then(text => {
+              const urls = text.split("\n");
+              urls.forEach(url => {
+                const row = document.createElement("tr");
+                const urlCell = document.createElement("td");
+                urlCell.textContent = url;
+                row.appendChild(urlCell);
+                const statusCell = document.createElement("td");
+                fetch(url, { mode: "no-cors" })
+                  .then(response => {
+                    if (response.ok) {
+                      statusCell.textContent = "OK";
+                      statusCell.classList.add("ok");
+                    } else {
+                      statusCell.textContent = response.status;
+                      statusCell.classList.add("error");
+                    }
+                  })
+                  .catch(error => {
+                    statusCell.textContent = error.message;
+                    statusCell.classList.add("error");
+                  })
+                  .finally(() => {
+                    row.appendChild(statusCell);
+                    tableBody.appendChild(row);
+                  });
               });
-          });
-        });
-    </script>
+            });
+        </script>
+      </tbody>
+    </table>
   </body>
 </html>
