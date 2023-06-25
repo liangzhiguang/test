@@ -1,25 +1,84 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>ChatGPT镜像网站检查</title>
-</head>
-<body>
-	<h1>ChatGPT镜像网站检查</h1>
-	<ul>
-		<?php
-			$file = fopen("URL.txt", "r") or die("无法打开文件！");
-			while(!feof($file)) {
-				$url = fgets($file);
-				$url = trim($url);
-				if (filter_var($url, FILTER_VALIDATE_URL)) {
-					$status = get_headers($url, 1)[0];
-					if(strpos($status, "200") !== false) {
-						echo "<li><a href='{$url}'>{$url}</a></li>";
-					}
-				}
-			}
-			fclose($file);
-		?>
-	</ul>
-</body>
+  <head>
+    <title>ChatGPT Mirror Status Checker</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+      }
+      h1 {
+        text-align: center;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      .success {
+        color: green;
+      }
+      .failure {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>ChatGPT Mirror Status Checker</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>URL</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="result-table-body"></tbody>
+    </table>
+    <script>
+      const urls = [
+        // 从url.txt中读取的网站链接
+      ];
+
+      const tableBody = document.getElementById('result-table-body');
+
+      urls.forEach((url) => {
+        fetch(url, { mode: 'no-cors' }).then((response) => {
+          const row = document.createElement('tr');
+          const urlCell = document.createElement('td');
+          const statusCell = document.createElement('td');
+          urlCell.innerText = url;
+          if (response.status === 200) {
+            row.classList.add('success');
+            statusCell.innerText = 'OK';
+            row.appendChild(urlCell);
+            row.appendChild(statusCell);
+            tableBody.appendChild(row);
+          } else {
+            row.classList.add('failure');
+            statusCell.innerText = response.status;
+            row.appendChild(urlCell);
+            row.appendChild(statusCell);
+            tableBody.appendChild(row);
+          }
+        }).catch((error) => {
+          const row = document.createElement('tr');
+          const urlCell = document.createElement('td');
+          const statusCell = document.createElement('td');
+          row.classList.add('failure');
+          urlCell.innerText = url;
+          statusCell.innerText = 'Failed';
+          row.appendChild(urlCell);
+          row.appendChild(statusCell);
+          tableBody.appendChild(row);
+        });
+      });
+    </script>
+  </body>
 </html>
