@@ -2,70 +2,92 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Check ChatGPT Mirror Links</title>
+  <title>URL Checker</title>
   <style>
     table {
       border-collapse: collapse;
       width: 100%;
     }
-
     th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
       text-align: left;
+      padding: 8px;
     }
-
     th {
-      background-color: #f2f2f2;
+      background-color: #4CAF50;
+      color: white;
     }
-
     tr:nth-child(even) {
       background-color: #f2f2f2;
     }
-
-    tr:hover {
-      background-color: #ddd;
+    .green {
+      color: green;
+    }
+    .red {
+      color: red;
     }
   </style>
 </head>
 <body>
-  <input type="file" id="fileInput">
+  <table>
+    <thead>
+      <tr>
+        <th>URL</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="table-body">
+    </tbody>
+  </table>
   <script>
-    const fileInput = document.getElementById('fileInput');
-    fileInput.addEventListener('change', (event) => {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.readAsText(file);
-      reader.onload = () => {
-        const fileContent = reader.result;
-        const urls = fileContent.split('\n').map(url => url.trim());
-        const table = document.createElement('table');
-        for (const url of urls) {
-          const row = table.insertRow();
-          const urlCell = row.insertCell();
+    fetch('url.txt')
+      .then(response => response.text())
+      .then(text => {
+        const urls = text.split('\n');
+        const tableBody = document.getElementById('table-body');
+        urls.forEach(url => {
+          const row = document.createElement('tr');
+          const urlCell = document.createElement('td');
           urlCell.textContent = url;
-          const statusCell = row.insertCell();
+          row.appendChild(urlCell);
+          const statusCell = document.createElement('td');
           fetch(url)
             .then(response => {
               if (response.ok) {
-                statusCell.textContent = 'OK';
-                statusCell.style.color = 'green';
-                urlCell.innerHTML = `<a href="${url}">${url}</a>`;
+                statusCell.textContent = '响应快';
+                statusCell.classList.add('green');
+                const link = document.createElement('a');
+                link.href = url;
+                link.target = '_blank';
+                link.textContent = url;
+                urlCell.innerHTML = '';
+                urlCell.appendChild(link);
               } else {
-                statusCell.textContent = response.status;
-                statusCell.style.color = 'red';
-                urlCell.innerHTML = `<a href="${url}" style="color: red;">${url}</a>`;
+                statusCell.textContent = '响应慢';
+                statusCell.classList.add('red');
+                const link = document.createElement('a');
+                link.href = url;
+                link.target = '_blank';
+                link.textContent = '测试';
+                urlCell.innerHTML = '';
+                urlCell.appendChild(link);
               }
             })
             .catch(error => {
-              statusCell.textContent = 'Error';
-              statusCell.style.color = 'red';
-              urlCell.innerHTML = `<a href="${url}" style="color: red;">${url}</a>`;
+              statusCell.textContent = '响应慢';
+              statusCell.classList.add('red');
+              const link = document.createElement('a');
+              link.href = url;
+              link.target = '_blank';
+              link.textContent = '测试';
+              urlCell.innerHTML = '';
+              urlCell.appendChild(link);
+            })
+            .finally(() => {
+              row.appendChild(statusCell);
+              tableBody.appendChild(row);
             });
-        }
-        document.body.appendChild(table);
-      };
-    });
+        });
+      });
   </script>
 </body>
 </html>
