@@ -5,25 +5,38 @@
   </head>
   <body>
     <h1>ChatGPT Mirror Sites</h1>
-    <ul>
-      <!-- Read the URLs from the url.txt file -->
-      <?php
-        $file = fopen("url.txt", "r") or die("Unable to open file!");
-        while(!feof($file)) {
-          $url = fgets($file);
-          $url = trim($url);
-          if ($url != "") {
+    <ul id="urls"></ul>
+    <script>
+      // Read the URLs from the url.txt file
+      fetch("url.txt")
+        .then(response => response.text())
+        .then(text => {
+          const urls = text.trim().split("\n");
+          const ul = document.getElementById("urls");
+          urls.forEach(url => {
             // Check if the URL is working
-            $headers = get_headers($url);
-            if (strpos($headers[0], "200") !== false) {
-              echo "<li><a href='$url'>$url</a> - Working</li>";
-            } else {
-              echo "<li><a href='$url'>$url</a> - Not Working</li>";
-            }
-          }
-        }
-        fclose($file);
-      ?>
-    </ul>
+            fetch(url)
+              .then(response => {
+                if (response.ok) {
+                  const li = document.createElement("li");
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.textContent = url;
+                  li.appendChild(a);
+                  li.appendChild(document.createTextNode(" - Working"));
+                  ul.appendChild(li);
+                } else {
+                  const li = document.createElement("li");
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.textContent = url;
+                  li.appendChild(a);
+                  li.appendChild(document.createTextNode(" - Not Working"));
+                  ul.appendChild(li);
+                }
+              });
+          });
+        });
+    </script>
   </body>
 </html>
