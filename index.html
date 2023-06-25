@@ -1,77 +1,71 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>ChatGPT Mirror Sites</title>
-    <style>
-      table {
-        border-collapse: collapse;
-        width: 100%;
-      }
-      th, td {
-        text-align: left;
-        padding: 8px;
-      }
-      th {
-        background-color: #4CAF50;
-        color: white;
-      }
-      tr:nth-child(even) {
-        background-color: #f2f2f2;
-      }
-      .ok {
-        color: green;
-      }
-      .error {
-        color: red;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>ChatGPT Mirror Sites</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>URL</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Read the URLs from the url.txt file -->
-        <script>
-          const urlFile = "url.txt";
-          const tableBody = document.querySelector("tbody");
-          fetch(urlFile)
-            .then(response => response.text())
-            .then(text => {
-              const urls = text.split("\n");
-              urls.forEach(url => {
-                const row = document.createElement("tr");
-                const urlCell = document.createElement("td");
-                urlCell.textContent = url;
-                row.appendChild(urlCell);
-                const statusCell = document.createElement("td");
-                fetch(url, { mode: "no-cors" })
-                  .then(response => {
-                    if (response.ok) {
-                      statusCell.textContent = "OK";
-                      statusCell.classList.add("ok");
-                    } else {
-                      statusCell.textContent = response.status;
-                      statusCell.classList.add("error");
-                    }
-                  })
-                  .catch(error => {
-                    statusCell.textContent = error.message;
-                    statusCell.classList.add("error");
-                  })
-                  .finally(() => {
-                    row.appendChild(statusCell);
-                    tableBody.appendChild(row);
-                  });
-              });
+<head>
+  <meta charset="UTF-8">
+  <title>Check ChatGPT Mirror Links</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #ddd;
+    }
+  </style>
+</head>
+<body>
+  <input type="file" id="fileInput">
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    fileInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.readAsText(file);
+      reader.onload = () => {
+        const fileContent = reader.result;
+        const urls = fileContent.split('\n').map(url => url.trim());
+        const table = document.createElement('table');
+        for (const url of urls) {
+          const row = table.insertRow();
+          const urlCell = row.insertCell();
+          urlCell.textContent = url;
+          const statusCell = row.insertCell();
+          fetch(url)
+            .then(response => {
+              if (response.ok) {
+                statusCell.textContent = 'OK';
+                statusCell.style.color = 'green';
+                urlCell.innerHTML = `<a href="${url}">${url}</a>`;
+              } else {
+                statusCell.textContent = response.status;
+                statusCell.style.color = 'red';
+                urlCell.innerHTML = `<a href="${url}" style="color: red;">${url}</a>`;
+              }
+            })
+            .catch(error => {
+              statusCell.textContent = 'Error';
+              statusCell.style.color = 'red';
+              urlCell.innerHTML = `<a href="${url}" style="color: red;">${url}</a>`;
             });
-        </script>
-      </tbody>
-    </table>
-  </body>
+        }
+        document.body.appendChild(table);
+      };
+    });
+  </script>
+</body>
 </html>
