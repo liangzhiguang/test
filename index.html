@@ -50,7 +50,7 @@
           urlCell.textContent = url;
           row.appendChild(urlCell);
           const statusCell = document.createElement('td');
-          fetch(url)
+          fetch(url, { timeout: 3000 }) // 设置3秒超时
             .then(response => {
               if (response.ok) {
                 statusCell.textContent = '响应快';
