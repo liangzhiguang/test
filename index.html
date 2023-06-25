@@ -1,215 +1,29 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>ChatGPT Mirror Status Checker</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        font-size: 14px;
-      }
-      h1 {
-        text-align: center;
-      }
-      table {
-        border-collapse: collapse;
-        width: 100%;
-      }
-      th, td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
-      }
-      th {
-        background-color: #f2f2f2;
-      }
-      .success {
-        color: green;
-      }
-      .failure {
-        color: red;
-      }
-    </style>
+    <title>ChatGPT Mirror Sites</title>
   </head>
   <body>
-    <h1>ChatGPT Mirror Status Checker</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>URL</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="result-table-body"></tbody>
-    </table>
-    <script>
-      const urls = [
-        https://free.easychat.work
-        http://chat3.aiyunos.top
-https://chat.waixingyun.cn/
-https://chat.weuseing.com/
-https://zyq-chatgpt.github.io
-http://chat.aisoftworks.com
-https://gptdidi.com/
-http://chat.darkflow.top/
-https://macll.cn/
-http://chat3.aiyunos.top
-https://chat.flares.ai/
-https://devgpt.com/
-https://chat.newstop.asia/
-https://nb8.c1ns.cn/
-https://chatyou.lovebaby.today/
-https://www.magicaibot.com/talk
-https://521.zeabur.app/
-https://chat.kunshanyuxin.com/
-https://chat.jubianxingqiu.com/
-https://tchat.c1ns.cn/
-https://a.aiask.me/
-https://ai.gptforlove.com/
-https://d2.betai55.uk/
-https://chat.pinkfong.cn/
-https://gpt4.gravityengine.cc/
-https://ai.heptax.com/
-https://index.chat.bnu120.space/
-https://f12.xjai.cc/
-https://nav4ai.net/chatgptweb
-https://mirrorchat.extkj.cn/
-https://chat13.xeasy.me/
-https://www.chatgptunli.com/chatgpt/
-https://dev.yqcloud.top/
-https://www.promptboom.com/
-https://greengpt.app/
-https://chatcat.zhaoyoung.me
-https://ai.mcbbs.gq/
-https://ai.gogpt.site/
-https://aichat.gogpt.site/
-https://vvanglro.eu.org/
-http://chat1.manongzyg.one/
-https://pro.ai.ls/
-https://freegpt.one/
-https://chatbot.theb.ai/
-https://www.aitianhu.com/
-https://chatcat.pages.dev/
-https://chat2.geekr.dev/
-https://chat.gpt.bz/
-https://ailink.icu/
-https://desk.im/
-https://ai.ls/
-https://ai.ci/
-https://chat2.xeasy.me/
-https://gpt.xeasy.me/
-https://gpt.getshare.net/
-http://chatai.fyi/
-https://chat.51buygpt.com/
-https://trychatgp.com/
-https://chat12.xeasy.me/
-https://tchat.c1ns.cn
-https://aixforce.app/
-http://www.tdchat.pro/
-https://chat.zhulei.xyz/
-https://www.typingmind.com/
-https://bettergpt.chat/
-https://chatgpt-cn.co/
-https://chatforai.com/
-https://ai.okmiku.com/chat
-https://freegpt.cc/
-https://wrtn.ai/
-https://www.aibvs.com/chat
-https://ai.hxkj.vip/
-https://carps.ink/
-https://chat.wenwen-ai.com/
-https://www.ai2dog.com/bavarder
-https://candy666.top/
-https://ai.fanyi.im
-https://chat.gpt4plus.fun
-https://chat.immuseai.com/
-https://chat.bumo.tech/
-https://chat.zhenbs.com/
-https://chat.iwoso.co/
-https://nat.dev/
-https://fastgpt.app/
-https://freechatgpt.chat/
-https://www.chatbotui.com/
-https://94gpt.com/
-https://xdu.cn/
-https://chat.icoding.ink/
-https://c1ns.cn/wlyzs
-https://chat.ijixian.com.cn
-https://www.magicaibot.com/talk
-https://www.dqzboy.top/
-http://ai.mkzero.top:44444/
-https://chatgpt-free.pro
-https://zyzyai.cn
-http://chat.moyifeng.top/
-https://www.confman.com/chat
-https://emkok.com
-https://varmsg.com/
-https://home.xiamis.xyz/
-https://chatgptmirror.com/
-https://ai.douresources.com
-http://a1ya.cn/9df35d55c75a5a90
-http://chatgpt.bamboochat.cn/
-https://aihalo.chat/
-https://chat1.wobcw.com/
-https://ai.iiter.cn/
-https://www.openaicloud.cloud/
-https://gpts.dawu.world/
-https://aiget.cc/
-http://bamboochat.kebakeba.com/
-https://gpt.uziai.com/
-https://chat.bumo.ai/
-https://ai.hxkj.vip/
-https://qxme.com/
-https://chat.douresources.com/
-https://chat.wobcw.com/
-https://www.vivi-chat.com/#/chat
-https://openmao.panchuang.net/
-https://www.weijiwangluo.com/talk
-https://gpt6.fun/
-https://chat.alpaca-bi.com/
-https://www.bz1y.cn/
-https://www.sweetsai.com/
-https://gpt.opengpt88.com/
-https://tubogpt.vercel.app/
-https://seven-star.org/
-https://chat.hehanwang.com/
-https://chat.8kg.co/
-https://open-gpt.app/
-
-      ];
-
-      const tableBody = document.getElementById('result-table-body');
-
-      urls.forEach((url) => {
-        fetch(url, { mode: 'no-cors' }).then((response) => {
-          const row = document.createElement('tr');
-          const urlCell = document.createElement('td');
-          const statusCell = document.createElement('td');
-          urlCell.innerText = url;
-          if (response.status === 200) {
-            row.classList.add('success');
-            statusCell.innerText = 'OK';
-            row.appendChild(urlCell);
-            row.appendChild(statusCell);
-            tableBody.appendChild(row);
-          } else {
-            row.classList.add('failure');
-            statusCell.innerText = response.status;
-            row.appendChild(urlCell);
-            row.appendChild(statusCell);
-            tableBody.appendChild(row);
+    <h1>ChatGPT Mirror Sites</h1>
+    <ul>
+      <!-- Read the URLs from the url.txt file -->
+      <?php
+        $file = fopen("url.txt", "r") or die("Unable to open file!");
+        while(!feof($file)) {
+          $url = fgets($file);
+          $url = trim($url);
+          if ($url != "") {
+            // Check if the URL is working
+            $headers = get_headers($url);
+            if (strpos($headers[0], "200") !== false) {
+              echo "<li><a href='$url'>$url</a> - Working</li>";
+            } else {
+              echo "<li><a href='$url'>$url</a> - Not Working</li>";
+            }
           }
-        }).catch((error) => {
-          const row = document.createElement('tr');
-          const urlCell = document.createElement('td');
-          const statusCell = document.createElement('td');
-          row.classList.add('failure');
-          urlCell.innerText = url;
-          statusCell.innerText = 'Failed';
-          row.appendChild(urlCell);
-          row.appendChild(statusCell);
-          tableBody.appendChild(row);
-        });
-      });
-    </script>
+        }
+        fclose($file);
+      ?>
+    </ul>
   </body>
 </html>
