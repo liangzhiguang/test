@@ -1,52 +1,25 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Chat with GPT-3</title>
-    <meta charset="utf-8" />
-    <script src="https://chatgpt.com/chatgpt.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  </head>
-  <body>
-    <script>
-      axios.get("url.txt").then(function(response) {
-        var urls = response.data.split("\n").filter(function(url) {
-          return url.trim().length > 0;
-        });
-        var validUrls = [];
-        var promises = urls.map(function(url) {
-          return new Promise(function(resolve, reject) {
-            var img = new Image();
-            img.onload = function() {
-              validUrls.push(url);
-              resolve();
-            };
-            img.onerror = function() {
-              resolve();
-            };
-            img.src = url;
-          });
-        });
-        Promise.all(promises).then(function() {
-          if (validUrls.length === 0) {
-            alert("没有可用的 chatgpt 镜像网址！");
-            return;
-          }
-          // 获取第一个可用的 URL
-          var validUrl = validUrls[0];
-          var promptUrl = validUrl + "?prompt=";
-          axios.get("prompt.txt").then(function(response) {
-            var prompt = response.data;
-            navigator.clipboard.writeText(prompt).then(function() {
-              console.log("提示词已复制到剪贴板");
-            }, function() {
-              console.log("无法复制提示词到剪贴板");
-            });
-            var encodedPrompt = encodeURIComponent(prompt);
-            var url = promptUrl + encodedPrompt;
-            chatgpt.open(url);
-          });
-        });
-      });
-    </script>
-  </body>
+<head>
+	<title>ChatGPT镜像网站检查</title>
+</head>
+<body>
+	<h1>ChatGPT镜像网站检查</h1>
+	<ul>
+		<?php
+			$file = fopen("URL.txt", "r") or die("无法打开文件！");
+			while(!feof($file)) {
+				$url = fgets($file);
+				$url = trim($url);
+				if (filter_var($url, FILTER_VALIDATE_URL)) {
+					$status = get_headers($url, 1)[0];
+					if(strpos($status, "200") !== false) {
+						echo "<li><a href='{$url}'>{$url}</a></li>";
+					}
+				}
+			}
+			fclose($file);
+		?>
+	</ul>
+</body>
 </html>
