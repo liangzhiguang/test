@@ -2,16 +2,27 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>几千人在线.屁颠去打开.请候10秒..</title>
+  <title>三只菠萝提供的ChaiGPT常年免费  免登录  免注册  遇到广告,请勿扫码,不用捐助,请忽略广告,建议退出重新打开新Ai,,,几千人同时在线有点慢,,,请稍候10秒钟...</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      display: none; /* 不显示任何内容 */
+    @keyframes marquee {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+
+    h1 {
+      white-space: nowrap;
+      overflow: hidden;
+      animation: marquee 20s linear infinite;
     }
   </style>
 </head>
 <body>
-  <h1>Ai大全</h1>
+  <h1>三只菠萝提供的ChaiGPT常年免费  免登录  免注册  遇到广告,请勿扫码,不用捐助,请忽略广告,建议退出重新打开新Ai,,,几千人同时在线有点慢,,,请稍候10秒钟...</h1>
   <table>
     <thead>
       <tr>
@@ -32,8 +43,8 @@
       .then(text => {
         const urls = text.split('\n');
         const tableBody = document.getElementById('table-body');
-        const slowestUrls = []; // 用于记录响应最慢的URL列表
-        
+        const fastUrls = [];
+
         // 遍历URL列表，逐个检查
         urls.forEach(url => {
           const row = document.createElement('tr');
@@ -41,50 +52,28 @@
           urlCell.textContent = url;
           row.appendChild(urlCell);
           const statusCell = document.createElement('td');
-          
+
           // 发起HTTP请求，检查URL响应时间
-          const controller = new AbortController(); // 创建一个AbortController实例，用于设置超时时间
+          const controller = new AbortController();
           const timeoutId = setTimeout(() => {
-            controller.abort(); // 超时后中止请求
+            controller.abort();
           }, TIMEOUT_MS);
           fetch(url, { signal: controller.signal })
             .then(response => {
-              clearTimeout(timeoutId); // 取消超时计时器
+              clearTimeout(timeoutId);
               if (response.ok) {
                 statusCell.textContent = '响应快';
                 statusCell.classList.add('green');
-                const link = document.createElement('a');
-                link.href = url;
-                link.target = '_blank';
-                link.textContent = url;
-                link.classList.add('green');
-                urlCell.innerHTML = '';
-                urlCell.appendChild(link);
+                fastUrls.push({ url, responseTime: response.elapsedTime });
               } else {
                 statusCell.textContent = '响应慢';
                 statusCell.classList.add('red');
-                const link = document.createElement('a');
-                link.href = url;
-                link.target = '_blank';
-                link.textContent = url;
-                link.classList.add('red');
-                urlCell.innerHTML = '';
-                urlCell.appendChild(link);
-                slowestUrls.push(url); // 记录响应慢的URL，用于跳转
               }
             })
             .catch(error => {
-              clearTimeout(timeoutId); // 取消超时计时器
-              statusCell.textContent = error.message; // 显示错误信息
+              clearTimeout(timeoutId);
+              statusCell.textContent = error.message;
               statusCell.classList.add('red');
-              const link = document.createElement('a');
-              link.href = url;
-              link.target = '_blank';
-              link.textContent = url;
-              link.classList.add('red');
-              urlCell.innerHTML = '';
-              urlCell.appendChild(link);
-              slowestUrls.push(url); // 记录响应慢的URL，用于跳转
             })
             .finally(() => {
               row.appendChild(statusCell);
@@ -92,11 +81,12 @@
             });
         });
 
-        // 定时跳转到响应最慢的URL
+        // 定时跳转到第三快的URL
         setInterval(() => {
-          if (slowestUrls.length > 0) {
-            const randomIndex = Math.floor(Math.random() * slowestUrls.length);
-            window.location.href = slowestUrls[randomIndex];
+          if (fastUrls.length >= 3) {
+            const sortedUrls = fastUrls.sort((a, b) => a.responseTime - b.responseTime);
+            const thirdFastestUrl = sortedUrls[2].url;
+            window.location.href = thirdFastestUrl;
           }
         }, CHECK_INTERVAL_MS);
       });
