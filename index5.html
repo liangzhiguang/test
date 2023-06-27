@@ -25,6 +25,30 @@
   <script>
     const TIMEOUT_MS = 10000; // 请求超时时间（毫秒）
     const CHECK_INTERVAL_MS = 5000; // 检查间隔时间（毫秒）
+    const RECENT_URLS_LIMIT = 12; // 最近访问 URL 的数量限制
+    const RECENT_URLS_EXPIRY_MS = 300000; // 最近访问 URL 的过期时间（毫秒）
+
+    function getRecentUrls() {
+      try {
+        const recentUrlsStr = localStorage.getItem('recentUrls');
+        if (recentUrlsStr) {
+          return JSON.parse(recentUrlsStr);
+        } else {
+          return [];
+        }
+      } catch (error) {
+        console.error(error);
+        return [];
+      }
+    }
+
+    function setRecentUrls(recentUrls) {
+      try {
+        localStorage.setItem('recentUrls', JSON.stringify(recentUrls));
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
     // 获取需要检查的URL列表
     fetch('url.txt')
@@ -93,17 +117,39 @@
 
         // 定时跳转到响应快的URL
         let currentUrl = window.location.href;
+        let recentUrls = getRecentUrls();
         setInterval(() => {
-          if (fastUrls.length > 0) {
-            let nextUrl = fastUrls[Math.floor(Math.random() * fastUrls.length)];
-            while (nextUrl === currentUrl) { // 如果下一个URL与当前URL相同，则重新选择
-              nextUrl = fastUrls[Math.floor(Math.random() * fastUrls.length)];
-            }
-            currentUrl = nextUrl; // 更新当前URL
-            window.location.href = currentUrl;
-          }
-        }, CHECK_INTERVAL_MS);
-      });
-  </script>
+          if (fastUrls.length > 
+              {
+let nextUrl = fastUrls[Math.floor(Math.random() * fastUrls.length)];
+const now = Date.now();
+
+     while (nextUrl === currentUrl || recentUrls.some(recentUrl => {
+       const [url, timestamp] = recentUrl;
+       return url === nextUrl && now - timestamp < RECENT_URLS_EXPIRY_MS;
+     })) { // 如果下一个URL与当前URL相同，或者最近访问过该URL，则重新选择
+       nextUrl = fastUrls[Math.floor(Math.random() * fastUrls.length)];
+     }
+
+     if (recentUrls.length >= RECENT_URLS_LIMIT) {
+       recentUrls.shift(); // 删除最早的URL
+     }
+
+     recentUrls.push([currentUrl, now]); // 将当前URL添加到最近访问列表中
+     setRecentUrls(recentUrls); // 保存最近访问列表
+
+     currentUrl = nextUrl; // 更新当前URL
+     window.location.href = currentUrl;
+   }
+ }, CHECK_INTERVAL_MS);
+
+ // 定期清理过期的最近访问URL
+ setInterval(() => {
+   const now = Date.now();
+   recentUrls = recentUrls.filter(recentUrl => now - recentUrl[1] < RECENT_URLS_EXPIRY_MS);
+   setRecentUrls(recentUrls); // 保存最近访问列表
+ }, RECENT_URLS_EXPIRY_MS / 2);
+});
+</script>
 </body>
 </html>
