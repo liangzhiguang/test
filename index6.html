@@ -142,7 +142,7 @@
             });
         });
 
-        // 定时跳转到最快或最慢的URL
+        // 定时跳转到最快或第二快的URL
         setInterval(() => {
           const now = new Date();
           const seconds = now.getSeconds();
@@ -152,8 +152,11 @@
             const randomIndex = Math.floor(Math.random() * fastestUrls.length);
             openWindowWithoutPopup(fastestUrls[randomIndex]);
           } else if ((lastDigit % 2 === 0 || lastDigit === 0) && slowestUrls.length > 0) {
-            const randomIndex = Math.floor(Math.random() * slowestUrls.length);
-            openWindowWithoutPopup(slowestUrls[randomIndex]);
+            let urlToOpen = slowestUrls[0];
+            if (slowestUrls.length > 1) {
+              urlToOpen = slowestUrls[1];
+            }
+            openWindowWithoutPopup(urlToOpen);
           }
         }, CHECK_INTERVAL_MS);
       });
@@ -161,20 +164,19 @@
     // 打开新窗口，排除弹出窗口和广告
     function openWindowWithoutPopup(url) {
       const popupWindow = window.open(url, '_blank');
-      let popupBlocked = false;
 
       // 检查是否有弹出窗口被阻止
-      if (!popupWindow || popupWindow.closed || typeof popupWindow.closed === 'undefined' || typeof popupWindow.outerHeight === 'undefined' || typeof popupWindow.outerWidth === 'undefined' || popupWindow.outerHeight === 0 || popupWindow.outerWidth === 0) {
-        popupBlocked = true;
-      }
-
-      if (!popupBlocked) {
+      if (popupWindow && !popupWindow.closed && typeof popupWindow.outerHeight !== 'undefined' && typeof popupWindow.outerWidth !== 'undefined' && popupWindow.outerHeight !== 0 && popupWindow.outerWidth !== 0) {
         popupWindow.addEventListener('beforeunload', function (event) {
           event.preventDefault();
           event.stopPropagation();
         });
       } else {
-        alert('弹出窗口被阻止，无法打开页面。');
+        const urlsToOpen = fastestUrls.concat(slowestUrls).filter(u => u !== url);
+        if (urlsToOpen.length > 0) {
+          const randomIndex = Math.floor(Math.random() * urlsToOpen.length);
+          window.location.href = urlsToOpen[randomIndex];
+        }
       }
     }
   </script>
