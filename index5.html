@@ -25,8 +25,6 @@
   <script>
     const TIMEOUT_MS = 10000; // 请求超时时间（毫秒）
     const CHECK_INTERVAL_MS = 5000; // 检查间隔时间（毫秒）
-    const RECENT_URLS_LIMIT = 12; // 最近访问URL的数量限制
-    const RECENT_URLS_EXPIRY_MS = 300000; // 最近访问URL的过期时间（毫秒）
 
     // 获取需要检查的URL列表
     fetch('url.txt')
@@ -95,27 +93,16 @@
 
         // 定时跳转到响应快的URL
         let currentUrl = window.location.href;
-        let recentUrls = [];
         setInterval(() => {
           if (fastUrls.length > 0) {
             let nextUrl = fastUrls[Math.floor(Math.random() * fastUrls.length)];
-            while (nextUrl === currentUrl || recentUrls.includes(nextUrl)) { // 如果下一个URL与当前URL相同，或者最近访问过该URL，则重新选择
+            while (nextUrl === currentUrl) { // 如果下一个URL与当前URL相同，则重新选择
               nextUrl = fastUrls[Math.floor(Math.random() * fastUrls.length)];
             }
-            if (recentUrls.length >= RECENT_URLS_LIMIT) {
-              recentUrls.shift(); // 删除最早的URL
-            }
-            recentUrls.push(currentUrl); // 将当前URL添加到最近访问列表中
             currentUrl = nextUrl; // 更新当前URL
             window.location.href = currentUrl;
           }
         }, CHECK_INTERVAL_MS);
-
-        // 定期清理过期的最近访问URL
-        setInterval(() => {
-          const now = Date.now();
-          recentUrls = recentUrls.filter(url => now - parseInt(url.split('-')[1]) < RECENT_URLS_EXPIRY_MS);
-        }, RECENT_URLS_EXPIRY_MS / 2);
       });
   </script>
 </body>
