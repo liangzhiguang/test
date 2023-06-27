@@ -119,8 +119,7 @@
         let currentUrl = window.location.href;
         let recentUrls = getRecentUrls();
         setInterval(() => {
-          if (fastUrls.length > 
-              {
+          if (fastUrls.length > 0) {
 let nextUrl = fastUrls[Math.floor(Math.random() * fastUrls.length)];
 const now = Date.now();
 
