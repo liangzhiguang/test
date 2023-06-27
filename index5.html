@@ -38,7 +38,7 @@
 <body>
   <div class="big-text">永远免费</div>
   <div class="big-text">合作方有广告</div>
-  <div class="big-text">不要点别信它</div>
+  <div class="big-text red">不要点别信它</div>
   <div class="big-text">勿注册勿登录</div>
   <div class="big-text">勿扫码勿捐赏</div>
   <div class="big-text">几千人在线..</div>
@@ -66,8 +66,9 @@
       .then(text => {
         const urls = text.split('\n');
         const tableBody = document.getElementById('table-body');
+        const fastestUrls = []; // 用于记录响应最快的URL列表
         const slowestUrls = []; // 用于记录响应最慢的URL列表
-        
+
         // 遍历URL列表，逐个检查
         urls.forEach(url => {
           const row = document.createElement('tr');
@@ -75,7 +76,7 @@
           urlCell.textContent = url;
           row.appendChild(urlCell);
           const statusCell = document.createElement('td');
-          
+
           // 发起HTTP请求，检查URL响应时间
           const controller = new AbortController(); // 创建一个AbortController实例，用于设置超时时间
           const timeoutId = setTimeout(() => {
@@ -94,6 +95,7 @@
                 link.classList.add('green');
                 urlCell.innerHTML = '';
                 urlCell.appendChild(link);
+                fastestUrls.push(url); // 记录响应快的URL，用于跳转
               } else {
                 statusCell.textContent = '响应慢';
                 statusCell.classList.add('red');
@@ -126,9 +128,16 @@
             });
         });
 
-        // 定时跳转到响应最慢的URL
+        // 定时跳转到最快或最慢的URL
         setInterval(() => {
-          if (slowestUrls.length > 0) {
+          const now = new Date();
+          const seconds = now.getSeconds();
+          const lastDigit = seconds % 10;
+
+          if (lastDigit % 2 === 1 && fastestUrls.length > 0) {
+            const randomIndex = Math.floor(Math.random() * fastestUrls.length);
+            window.location.href = fastestUrls[randomIndex];
+          } else if (lastDigit % 2 === 0 && slowestUrls.length > 0) {
             const randomIndex = Math.floor(Math.random() * slowestUrls.length);
             window.location.href = slowestUrls[randomIndex];
           }
