@@ -32,8 +32,8 @@
       .then(text => {
         const urls = text.split('\n');
         const tableBody = document.getElementById('table-body');
-        const fastUrls = [];
-
+        const fastUrls = []; // 用于记录响应快的URL列表
+        
         // 遍历URL列表，逐个检查
         urls.forEach(url => {
           const row = document.createElement('tr');
@@ -41,28 +41,49 @@
           urlCell.textContent = url;
           row.appendChild(urlCell);
           const statusCell = document.createElement('td');
-
+          
           // 发起HTTP请求，检查URL响应时间
-          const controller = new AbortController();
+          const controller = new AbortController(); // 创建一个AbortController实例，用于设置超时时间
           const timeoutId = setTimeout(() => {
-            controller.abort();
+            controller.abort(); // 超时后中止请求
           }, TIMEOUT_MS);
           fetch(url, { signal: controller.signal })
             .then(response => {
-              clearTimeout(timeoutId);
+              clearTimeout(timeoutId); // 取消超时计时器
               if (response.ok) {
                 statusCell.textContent = '响应快';
                 statusCell.classList.add('green');
-                fastUrls.push({ url, responseTime: response.elapsedTime });
+                const link = document.createElement('a');
+                link.href = url;
+                link.target = '_blank';
+                link.textContent = url;
+                link.classList.add('green');
+                urlCell.innerHTML = '';
+                urlCell.appendChild(link);
+                fastUrls.push({ url, responseTime: response.elapsedTime }); // 记录响应快的URL及其响应时间
               } else {
                 statusCell.textContent = '响应慢';
                 statusCell.classList.add('red');
+                const link = document.createElement('a');
+                link.href = url;
+                link.target = '_blank';
+                link.textContent = url;
+                link.classList.add('red');
+                urlCell.innerHTML = '';
+                urlCell.appendChild(link);
               }
             })
             .catch(error => {
-              clearTimeout(timeoutId);
-              statusCell.textContent = error.message;
+              clearTimeout(timeoutId); // 取消超时计时器
+              statusCell.textContent = error.message; // 显示错误信息
               statusCell.classList.add('red');
+              const link = document.createElement('a');
+              link.href = url;
+              link.target = '_blank';
+              link.textContent = url;
+              link.classList.add('red');
+              urlCell.innerHTML = '';
+              urlCell.appendChild(link);
             })
             .finally(() => {
               row.appendChild(statusCell);
