@@ -3,9 +3,7 @@ https://www.aisoftworks.com/chat
 http://chat.freebot.one/#/chat/1002
 https://vlwdq.aitianhu.fun/#/chat/1002
 http://chat4.wuguokai.cn/#/chat/1687711467380
-http://vip.tchat.asia:666/index/1002
 http://www.tdchat.pro/
-http://wes.zw7.lol/
 http://zhimachat.com/
 https://175.178.88.119/#/ChatHome
 https://ai.ci/?chat=1
@@ -21,8 +19,6 @@ https://anonchatgpt.com/
 http://chat.2.bnu120.space/
 http://chat.0.bnu120.space/
 https://chat.51buygpt.com/
-https://chat.6.bnu120.space/
-https://chat.aibeke.cn/#/chat/1002
 https://chat.chatbot.sex/chat/
 https://chat.gpt.bz/gpt
 https://chat.helloagi.top/#/chat/9e27919f57e149e583e2597137c64925
@@ -30,11 +26,8 @@ https://b.free-chat.asia/
 https://chat.pinkfong.cn/#/chat
 https://chat.smartagi.top/#/chat/43862f9b69b840ecaaec9c71d3f77973
 https://chat.ttext.cn/
-http://chat.waixingyun.cn/#/chat/gpt/1002
-https://chat.weuseing.com/
 https://chat.wuguokai.cn/#/chat/1687712070001
 https://chat.yqcloud.top/#/chat/1687712068250
-https://chat.zhulei.xyz/
 https://chat.wuguokai.cn/#/chat/1687712072343
 https://chat2.jinshutuan.com/#/chat/1687707484030
 https://chat4.aitianhu.top/#/chat/1002
@@ -50,11 +43,9 @@ https://dev.yqcloud.top/#/chat/1687707815478
 https://edp.skyworthdigital.com/chatgptv2/#/chat/1002
 https://fff.mygpt.bid/
 https://free.easychat.work/
-https://good.nxcwwl.cn/chat/b5b68363-9c59-40f8-8b14-03daa6f45355
 http://gpt.mqgggg.top/
 https://gpt.tool00.com/
 https://gpt4.gravityengine.cc/
-https://gptdidi.com/
 https://heypi.com/talk
 https://17.nb8.ltd/index/1002
 https://iii.mygpt.bid/
