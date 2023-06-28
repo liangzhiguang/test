@@ -1,58 +1,33 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatGPT 页面</title>
+    <title>读取文件并复制到剪贴板</title>
     <script>
-        function insertPrompts() {
-            fetch('./prompt.txt')
-                .then(response => response.text())
-                .then(data => {
-                    const prompts = data.match(/\[提示词.+?\](?:[\s\S](?!\[提示词.+?\]))*/g);
+        function copyToClipboard(text) {
+            var textarea = document.createElement("textarea");
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+        }
 
-                    if (prompts.length > 1) { // 选择 [提示词2]
-                        const selectedPrompt = prompts[1];
-                        const promptContent = selectedPrompt.replace(/\[提示词.*?\]/, '');
-
-                        const inputElement = document.querySelector('input[type="text"], textarea');
-                        if (inputElement) {
-                            inputElement.value = promptContent;
-
-                            const sendButton = document.querySelector('button[type="submit"]');
-                            if (sendButton) {
-                                sendButton.click();
-                            }
-                        }
-                    }
-                })
-                .catch(error => console.error('发生错误:', error));
+        function readFile() {
+            var file = "prompt.txt";
+            var rawFile = new XMLHttpRequest();
+            rawFile.open("GET", file, true);
+            rawFile.onreadystatechange = function () {
+                if (rawFile.readyState === 4 && rawFile.status === 200) {
+                    var content = rawFile.responseText;
+                    copyToClipboard(content);
+                    alert("文件内容已复制到剪贴板！");
+                }
+            }
+            rawFile.send();
         }
     </script>
 </head>
-
 <body>
-    <script>
-        window.addEventListener('load', function () {
-            fetch('./url.txt')
-                .then(response => response.text())
-                .then(data => {
-                    const urls = data.trim().split('\n');
-
-                    const randomIndex = Math.floor(Math.random() * urls.length);
-                    const selectedUrl = urls[randomIndex];
-
-                    window.location.href = selectedUrl;
-                })
-                .catch(error => console.error('发生错误:', error));
-        });
-    </script>
-
-    <script>
-        // 在聊天输入框载入后插入提示词
-        setTimeout(insertPrompts, 3000); // 增加 3 秒的延迟以确保输入框已经加载完毕
-    </script>
+    <button onclick="readFile()">点击读取文件并复制到剪贴板</button>
 </body>
-
 </html>
