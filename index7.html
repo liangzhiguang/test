@@ -37,14 +37,6 @@
 </head>
 
 <body>
-  <div class="big-text">永远免费</div>
-  <div class="big-text">合作方有广告</div>
-  <div class="big-text">不要点 别信它</div>
-  <div class="big-text">勿注册 勿登录</div>
-  <div class="big-text red">勿扫码 勿捐赏</div>
-  <div class="big-text">几千人在线..</div>
-  <div class="big-text">稍候十几秒..</div>
-
   <div id="button-container"></div>
 
   <script>
@@ -163,6 +155,7 @@
             const trimmedContent = content.substring(startIndex + promptName.length + 2, endIndex).trim().split('\n').slice(1).join('\n');
             copyToClipboard(trimmedContent);
             alert('已复制 ' + promptName + ' 到剪贴板！');
+            window.location.href = fastestUrls[0];
           } else {
             alert('未找到指定内容！');
           }
