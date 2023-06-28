@@ -24,7 +24,7 @@
                     if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
                         var trimmedContent = content.substring(startIndex + 7, endIndex).trim().split("\n").slice(1).join("\n");
                         copyToClipboard(trimmedContent);
-                        alert("请粘贴到chatgpt的输入框发送");
+                        alert("复制成功,请粘贴到chatgpt的输入框发送");
                     } else {
                         alert("未找到指定内容！");
                     }
@@ -35,6 +35,6 @@
     </script>
 </head>
 <body>
-    <button onclick="readFile()">点击复制 提示词1</button>
+    <button onclick="readFile()">复制 小说家 提示词</button>
 </body>
 </html>
