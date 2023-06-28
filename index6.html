@@ -12,30 +12,29 @@
             document.body.removeChild(textarea);
         }
 
-        function readPrompt() {
+        function readFile() {
             var file = "prompt.txt";
             var rawFile = new XMLHttpRequest();
             rawFile.open("GET", file, true);
             rawFile.onreadystatechange = function () {
                 if (rawFile.readyState === 4 && rawFile.status === 200) {
                     var content = rawFile.responseText;
-                    var startTag = "[提示词2]";
-                    var endTag = "[";
-                    var startIndex = content.indexOf(startTag) + startTag.length;
-                    var endIndex = content.indexOf(endTag, startIndex);
-                    var prompt = content.substring(startIndex, endIndex);
-                    copyToClipboard(prompt.trim());
-                    alert("提示词已复制到剪贴板！");
+                    var startIndex = content.indexOf("[提示词2开始]");
+                    var endIndex = content.indexOf("[提示词2结束]");
+                    if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
+                        var trimmedContent = content.substring(startIndex + 7, endIndex);
+                        copyToClipboard(trimmedContent);
+                        alert("文件内容已复制到剪贴板！");
+                    } else {
+                        alert("未找到指定内容！");
+                    }
                 }
             }
             rawFile.send();
         }
-
-        window.onload = function () {
-            readPrompt();
-        };
     </script>
 </head>
 <body>
+    <button onclick="readFile()">复制提示词2</button>
 </body>
 </html>
