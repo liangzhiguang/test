@@ -12,33 +12,7 @@
             document.body.removeChild(textarea);
         }
 
-        function readFile() {
-            var file = "prompt.txt";
-            var rawFile = new XMLHttpRequest();
-            rawFile.open("GET", file, true);
-            rawFile.onreadystatechange = function () {
-                if (rawFile.readyState === 4 && rawFile.status === 200) {
-                    var content = rawFile.responseText;
-                    var prompts = content.match(/\[(.*?)开始\]/g);
-                    if (prompts) {
-                        for (var i = 0; i < prompts.length; i++) {
-                            var prompt = prompts[i].substring(1, prompts[i].length - 3);
-                            var button = document.createElement("button");
-                            button.innerHTML = "先复制 " + prompt;
-                            button.onclick = function() {
-                                copyPromptToClipboard(this.innerHTML.substring(6));
-                            }
-                            document.body.appendChild(button);
-                        }
-                    } else {
-                        alert("未找到任何提示词！");
-                    }
-                }
-            }
-            rawFile.send();
-        }
-
-        function copyPromptToClipboard(prompt) {
+        function readFile(prompt) {
             var file = "prompt.txt";
             var rawFile = new XMLHttpRequest();
             rawFile.open("GET", file, true);
@@ -61,10 +35,11 @@
     </script>
 </head>
 <body>
-    <button onclick="readFile()">检测并生成按钮</button>
+    <button onclick="readFile('小说家提示词')">先复制 小说家提示词</button>
+    <button onclick="readFile('同类歌曲推荐人提示词')">先复制 同类歌曲推荐人提示词</button>
+    <button onclick="readFile('免费咨询律师提示词')">先复制 免费咨询律师提示词</button>
+    <button onclick="readFile('python老师提示词')">先复制 python老师提示词</button>
+    <!-- 可以根据需要增加更多按钮 -->
 
-    <script>
-        readFile();
-    </script>
 </body>
 </html>
