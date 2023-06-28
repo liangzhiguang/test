@@ -1,45 +1,126 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <title>ChatGPT</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT Prompt Automation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        #loadingMessage {
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        #errorMessage {
+            color: red;
+            text-align: center;
+            margin-top: 100px;
+        }
+    </style>
 </head>
 <body>
-    <script>
-        window.onload = function() {
-            fetch('url.txt')
-                .then(response => response.text())
-                .then(data => {
-                    const urls = data.split('\n');
-                    const randomIndex = Math.floor(Math.random() * urls.length);
-                    window.location.href = urls[randomIndex];
-                })
-                .catch(error => {
-                    console.error('Failed to fetch URLs:', error);
-                });
-        };
+    <h1>ChatGPT Prompt Automation</h1>
 
-        function sendPrompts() {
-            fetch('prompt.txt')
-                .then(response => response.text())
-                .then(data => {
-                    const prompts = data.split('[提示词');
-                    prompts.shift(); // Remove empty first element                    const inputElement = findChatInput(); // Function to find the chat input element on the page
+    <div id="loadingMessage">Loading...</div>
 
-                    if (inputElement) {
-                        const firstPromptContent = prompts[0].substring(2); // Remove '..]' from the first prompt                        inputElement.value = firstPromptContent;
-                        inputElement.form.submit();
-                    } else {
-                        console.error('Failed to find chat input element.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Failed to fetch prompts:', error);
-                });
-        }
+    <div id="errorMessage"></div>
 
-        function findChatInput() {
-            // Implement the logic to find the chat input element on the opened URL page using JavaScript
-            // This may vary depending on the structure of the page and the chat interface used            // You can use DOM manipulation methods or other techniques to locate the input element        }
-    </script>
+    <script>
+        function redirectToChat() {
+            var xhr = new XMLHttpRequest();
+            
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var url = xhr.responseText;
+                        window.location.href = url;
+                    } else {
+                        document.getElementById('loadingMessage').style.display = 'none';
+                        document.getElementById('errorMessage').textContent = 'Failed to retrieve ChatGPT URL.';
+                    }
+                }
+            };
+            
+            xhr.open('GET', 'url.txt', true);
+            xhr.send();
+        }
+        
+        window.onload = function () {
+            redirectToChat();
+        };
+
+      <iframe id="chatFrame" src="" onload="injectPrompts()" style="display: none;"></iframe>
+
+    <div id="loadingMessage">Loading...</div>
+
+    <div id="errorMessage"></div>
+
+    <script>
+        var prompts = [];
+
+        function loadPrompts() {
+            var xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        prompts = xhr.responseText.split('\n');
+                        var index = Math.floor(Math.random() * prompts.length);
+                        document.getElementById('chatFrame').src = prompts[index];
+                    } else {
+                        document.getElementById('loadingMessage').style.display = 'none';
+                        document.getElementById('errorMessage').textContent = 'Failed to retrieve ChatGPT URL list.';
+                    }
+                }
+            };
+
+            xhr.open('GET', 'url.txt', true);
+            xhr.send();
+        }
+
+        function injectPrompts() {
+            var chatFrame = document.getElementById('chatFrame').contentWindow.document;
+            var inputElements = chatFrame.getElementsByTagName('input');
+
+            if (inputElements.length > 0) {
+                var inputElement = inputElements[0];
+                var prompt = prompts.pop();
+                var startWord = '[提示词2]';
+                var endWord = '[提示词3]';
+                var content = extractContent(prompt, startWord, endWord);
+
+                if (content) {
+                    inputElement.value = content;
+                    inputElement.form.submit();
+                } else {
+                    document.getElementById('loadingMessage').style.display = 'none';
+                    document.getElementById('errorMessage').textContent = 'Failed to extract prompt content.';
+                }
+            } else {
+                setTimeout(injectPrompts, 1000);
+            }
+        }
+              // 提取内容函数
+        function extractContent(text, startWord, endWord) {
+            var pattern = new RegExp("\\[" + startWord + "\\](.*?)\\[" + endWord + "\\]\\b", "s");
+            var matches = text.match(pattern);
+            if (matches && matches.length > 1) {
+                return matches[1].trim();
+            } else {
+                return null;
+            }
+        }
+
+        window.onload = function () {
+            loadPrompts();
+        };
+    </script>
 </body>
 </html>
