@@ -2,16 +2,6 @@
 <html>
 <head>
     <title></title>
-    <style>
-        .button-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .button-container button {
-            margin: 5px;
-        }
-    </style>
     <script>
         function copyToClipboard(text) {
             var textarea = document.createElement("textarea");
@@ -22,7 +12,7 @@
             document.body.removeChild(textarea);
         }
 
-        function parsePromptFile() {
+        function readFile() {
             var file = "prompt.txt";
             var rawFile = new XMLHttpRequest();
             rawFile.open("GET", file, true);
@@ -30,19 +20,15 @@
                 if (rawFile.readyState === 4 && rawFile.status === 200) {
                     var content = rawFile.responseText;
                     var prompts = content.match(/\[(.*?)开始\]/g);
-                    
                     if (prompts) {
                         for (var i = 0; i < prompts.length; i++) {
-                            var promptStart = prompts[i].substring(1, prompts[i].length - 3);
-
+                            var prompt = prompts[i].substring(1, prompts[i].length - 3);
                             var button = document.createElement("button");
-                            button.innerHTML = "先复制 " + promptStart;
+                            button.innerHTML = "先复制 " + prompt;
                             button.onclick = function() {
-                                var prompt = this.innerHTML.substring(6);
-                                copyPromptToClipboard(prompt);
+                                copyPromptToClipboard(this.innerHTML.substring(6));
                             }
-
-                            document.getElementById("button-container").appendChild(button);
+                            document.body.appendChild(button);
                         }
                     } else {
                         alert("未找到任何提示词！");
@@ -60,7 +46,7 @@
                 if (rawFile.readyState === 4 && rawFile.status === 200) {
                     var content = rawFile.responseText;
                     var startIndex = content.indexOf("[" + prompt + "开始]");
-                    var endIndex = content.indexOf("[" + prompt + "结束]", startIndex);
+                    var endIndex = content.indexOf("[" + prompt + "结束]");
                     if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
                         var trimmedContent = content.substring(startIndex + prompt.length + 2, endIndex).trim().split("\n").slice(1).join("\n");
                         copyToClipboard(trimmedContent);
@@ -75,9 +61,10 @@
     </script>
 </head>
 <body>
-    <div class="button-container" id="button-container"></div>
+    <button onclick="readFile()">检测并生成按钮</button>
+
     <script>
-        parsePromptFile();
+        readFile();
     </script>
 </body>
 </html>
