@@ -1,54 +1,45 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatGPT 页面</title>
-    <script>
-        function insertPrompts() {
-            fetch('./prompt.txt')
-                .then(response => response.text())
-                .then(data => {
-                    const prompts = data.match(/\[提示词.+?\](?:[\s\S](?!\[提示词.+?\]))*/g);
-                    
-                    if (prompts.length > 1) { // 选择 [提示词2]
-                        const selectedPrompt = prompts[1];
-                        const promptContent = selectedPrompt.replace(/\[提示词.*?\]/, '');
-    
-                        const inputElement = document.querySelector('input[type="text"], textarea');
-                        if (inputElement) {
-                            inputElement.value = promptContent;
-    
-                            const sendButton = document.querySelector('button[type="submit"]');
-                            if (sendButton) {
-                                sendButton.click();
-                            }
-                        }
-                    }
-                })
-                .catch(error => console.error('发生错误:', error));
-        }
-    </script>
+    <title>ChatGPT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <script>
-        window.addEventListener('load', function() {
-            fetch('./url.txt')
-                .then(response => response.text())
-                .then(data => {
-                    const urls = data.trim().split('\n');
-    
-                    const randomIndex = Math.floor(Math.random() * urls.length);
-                    const selectedUrl = urls[randomIndex];
-    
-                    window.location.href = selectedUrl;
-                })
-                .catch(error => console.error('发生错误:', error));
-        });
-    </script>
+    <script>
+        window.onload = function() {
+            fetch('url.txt')
+                .then(response => response.text())
+                .then(data => {
+                    const urls = data.split('\n');
+                    const randomIndex = Math.floor(Math.random() * urls.length);
+                    window.location.href = urls[randomIndex];
+                })
+                .catch(error => {
+                    console.error('Failed to fetch URLs:', error);
+                });
+        };
 
-    <script>
-        window.addEventListener('load', insertPrompts);
-    </script>
+        function sendPrompts() {
+            fetch('prompt.txt')
+                .then(response => response.text())
+                .then(data => {
+                    const prompts = data.split('[提示词');
+                    prompts.shift(); // Remove empty first element                    const inputElement = findChatInput(); // Function to find the chat input element on the page
+
+                    if (inputElement) {
+                        const firstPromptContent = prompts[0].substring(2); // Remove '..]' from the first prompt                        inputElement.value = firstPromptContent;
+                        inputElement.form.submit();
+                    } else {
+                        console.error('Failed to find chat input element.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Failed to fetch prompts:', error);
+                });
+        }
+
+        function findChatInput() {
+            // Implement the logic to find the chat input element on the opened URL page using JavaScript
+            // This may vary depending on the structure of the page and the chat interface used            // You can use DOM manipulation methods or other techniques to locate the input element        }
+    </script>
 </body>
 </html>
