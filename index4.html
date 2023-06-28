@@ -20,11 +20,12 @@
             rawFile.onreadystatechange = function () {
                 if (rawFile.readyState === 4 && rawFile.status === 200) {
                     var content = rawFile.responseText;
-                    var regex = new RegExp("\\[" + prompt + "开始\\][\\s\\S]*?\\[" + prompt + "结束\\]");
-                    var matches = content.match(regex);
-                    if (matches && matches.length > 0) {
-                        var trimmedContent = matches[0].replace("[" + prompt + "开始]", "").replace("[" + prompt + "结束]", "").trim();
+                    var startIndex = content.indexOf("[" + prompt + "开始]");
+                    var endIndex = content.indexOf("[" + prompt + "结束]");
+                    if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
+                        var trimmedContent = content.substring(startIndex + prompt.length + 2, endIndex).trim().split("\n").slice(1).join("\n");
                         copyToClipboard(trimmedContent);
+                        alert("已复制 " + prompt + " 到剪贴板！");
                     } else {
                         alert("未找到指定内容！");
                     }
@@ -34,29 +35,21 @@
         }
 
         window.addEventListener('DOMContentLoaded', function () {
-            var file = "prompt.txt";
-            var rawFile = new XMLHttpRequest();
-            rawFile.open("GET", file, true);
-            rawFile.onreadystatechange = function () {
-                if (rawFile.readyState === 4 && rawFile.status === 200) {
-                    var content = rawFile.responseText;
-                    var regex = /\[(.*?)开始\]/g;
-                    var matches = content.match(regex);
-                    if (matches && matches.length > 0) {
-                        var buttonContainer = document.getElementById("buttonContainer");
-                        matches.forEach(function (match) {
-                            var prompt = match.substring(1, match.length - 3);
-                            var button = document.createElement("button");
-                            button.textContent = "先复制 " + prompt;
-                            button.addEventListener('click', function () {
-                                readFile(prompt);
-                            });
-                            buttonContainer.appendChild(button);
-                        });
-                    }
-                }
-            };
-            rawFile.send();
+            var buttons = [
+                { prompt: '小说家提示词', id: 'btnPromptWriter' },
+                { prompt: '同类歌曲推荐人提示词', id: 'btnPromptSong' },
+                { prompt: '免费咨询律师提示词', id: 'btnPromptLawyer' },
+                { prompt: 'python老师提示词', id: 'btnPromptPython' }
+            ];
+
+            buttons.forEach(function (buttonInfo) {
+                var button = document.createElement("button");
+                button.textContent = "先复制 " + buttonInfo.prompt;
+                button.addEventListener('click', function () {
+                    readFile(buttonInfo.prompt);
+                });
+                document.getElementById("buttonContainer").appendChild(button);
+            });
         });
     </script>
 </head>
