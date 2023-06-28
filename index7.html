@@ -1,174 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>777777</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f1f1f1;
-    }
-
-    h1, table {
-      display: none;
-    }
-
-    .big-text {
-      font-size: 12vw;
-      text-align: center;
-      margin: 1vw;
-    }
-
-    .green {
-      color: green;
-    }
-
-    .red {
-      color: red;
-    }
-  </style>
-</head>
-
-<body>
-  <div id="button-container"></div>
-
+  <title></title>
   <script>
-    const TIMEOUT_MS = 12000; // 请求超时时间（毫秒）
-    const CHECK_INTERVAL_MS = 1000; // 检查间隔时间（毫秒）
+    function copyToClipboard(text) {
+      var textarea = document.createElement("textarea");
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+    }
 
-    // 获取需要检查的URL列表
-    fetch('url.txt')
-      .then(response => response.text())
-      .then(text => {
-        const urls = text.split('\n');
-        const tableBody = document.getElementById('table-body');
-        const fastestUrls = []; // 用于记录响应最快的URL列表
-        const slowestUrls = []; // 用于记录响应最慢的URL列表
+    function readFile() {
+      var file = "prompt.txt";
+      var rawFile = new XMLHttpRequest();
+      rawFile.open("GET", file, true);
+      rawFile.onreadystatechange = function() {
+        if (rawFile.readyState === 4 && rawFile.status === 200) {
+          var content = rawFile.responseText;
+          var prompts = content.match(/\[(.*?)开始\]/g);
+          if (prompts && prompts.length > 0) {
+            var buttonContainer = document.getElementById("button-container");
+            buttonContainer.innerHTML = ""; // 清空容器
 
-        // 遍历URL列表，逐个检查
-        urls.forEach(url => {
-          const row = document.createElement('tr');
-          const urlCell = document.createElement('td');
-          urlCell.textContent = url;
-          row.appendChild(urlCell);
-          const statusCell = document.createElement('td');
+            prompts.forEach(function(prompt) {
+              var promptName = prompt.substring(1, prompt.length - 3);
 
-          // 发起HTTP请求，检查URL响应时间
-          const controller = new AbortController(); // 创建一个AbortController实例，用于设置超时时间
-          const timeoutId = setTimeout(() => {
-            controller.abort(); // 超时后中止请求
-          }, TIMEOUT_MS);
-          fetch(url, { signal: controller.signal })
-            .then(response => {
-              clearTimeout(timeoutId); // 取消超时计时器
-              if (response.ok) {
-                statusCell.textContent = '响应快';
-                statusCell.classList.add('green');
-                const link = document.createElement('a');
-                link.href = url;
-                link.target = '_blank';
-                link.textContent = url;
-                link.classList.add('green');
-                urlCell.innerHTML = '';
-                urlCell.appendChild(link);
-                fastestUrls.push(url); // 记录响应快的URL，用于跳转
-              } else {
-                statusCell.textContent = '响应慢';
-                statusCell.classList.add('red');
-                const link = document.createElement('a');
-                link.href = url;
-                link.target = '_blank';
-                link.textContent = url;
-                link.classList.add('red');
-                urlCell.innerHTML = '';
-                urlCell.appendChild(link);
-                slowestUrls.push(url); // 记录响应慢的URL，用于跳转
-              }
-            })
-            .catch(error => {
-              clearTimeout(timeoutId); // 取消超时计时器
-              statusCell.textContent = error.message; // 显示错误信息
-              statusCell.classList.add('red');
-              const link = document.createElement('a');
-              link.href = url;
-              link.target = '_blank';
-              link.textContent = url;
-              link.classList.add('red');
-              urlCell.innerHTML = '';
-              urlCell.appendChild(link);
-              slowestUrls.push(url); // 记录响应慢的URL，用于跳转
-            })
-            .finally(() => {
-              row.appendChild(statusCell);
-              tableBody.appendChild(row);
+              // 创建按钮元素
+              var button = document.createElement("button");
+              button.textContent = "先复制 " + promptName;
+              button.onclick = function() {
+                copyPromptToClipboard(content, promptName);
+              };
+
+              // 添加按钮到容器中
+              buttonContainer.appendChild(button);
             });
-        });
-
-        function copyToClipboard(text) {
-          var textarea = document.createElement("textarea");
-          textarea.value = text;
-          document.body.appendChild(textarea);
-          textarea.select();
-          document.execCommand("copy");
-          document.body.removeChild(textarea);
-        }
-
-        function loadPromptButtons() {
-          fetch('prompt.txt')
-            .then(response => response.text())
-            .then(text => {
-              const prompts = text.match(/\[(.*?)开始\]/g);
-              if (prompts && prompts.length > 0) {
-                const buttonContainer = document.getElementById('button-container');
-                buttonContainer.innerHTML = '';
-
-                prompts.forEach(prompt => {
-                  const promptName = prompt.substring(1, prompt.length - 3);
-
-                  // 创建按钮元素
-                  const button = document.createElement('button');
-                  button.textContent = '复制 ' + promptName;
-                  button.onclick = () => {
-                    copyPromptToClipboard(text, promptName);
-                  };
-
-                  // 添加按钮到容器中
-                  buttonContainer.appendChild(button);
-                });
-              } else {
-                alert('未找到指定内容！');
-              }
-            });
-        }
-
-        function copyPromptToClipboard(content, promptName) {
-          const startIndex = content.indexOf('[' + promptName + '开始]');
-          const endIndex = content.indexOf('[' + promptName + '结束]');
-          if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
-            const trimmedContent = content.substring(startIndex + promptName.length + 2, endIndex).trim().split('\n').slice(1).join('\n');
-            copyToClipboard(trimmedContent);
-            alert('已复制 ' + promptName + ' 到剪贴板！');
-            window.location.href = fastestUrls[0];
           } else {
-            alert('未找到指定内容！');
+            alert("未找到指定内容！");
           }
         }
+      };
+      rawFile.send();
+    }
 
-        // 在页面加载完成后执行loadPromptButtons()函数
-        window.onload = loadPromptButtons;
-      });
-
-    // 阻止页面自动跳转
-    setTimeout(() => {
-      window.stop();
-    }, 5000);
+    function copyPromptToClipboard(content, promptName) {
+      var startIndex = content.indexOf("[" + promptName + "开始]");
+      var endIndex = content.indexOf("[" + promptName + "结束]");
+      if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
+        var trimmedContent = content.substring(startIndex + promptName.length + 2, endIndex).trim().split("\n").slice(1).join("\n");
+        copyToClipboard(trimmedContent);
+        alert("已复制 " + promptName + " 到剪贴板！");
+        window.location.href = "index5.html";
+      } else {
+        alert("未找到指定内容！");
+      }
+    }
   </script>
+</head>
+<body onload="readFile()">
+  <div id="button-container"></div>
 </body>
 </html>
