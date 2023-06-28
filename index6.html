@@ -12,19 +12,19 @@
             document.body.removeChild(textarea);
         }
 
-        function readFile() {
+        function readFile(prompt) {
             var file = "prompt.txt";
             var rawFile = new XMLHttpRequest();
             rawFile.open("GET", file, true);
             rawFile.onreadystatechange = function () {
                 if (rawFile.readyState === 4 && rawFile.status === 200) {
                     var content = rawFile.responseText;
-                    var startIndex = content.indexOf("[提示词1开始]");
-                    var endIndex = content.indexOf("[提示词1结束]");
+                    var startIndex = content.indexOf("[" + prompt + "开始]");
+                    var endIndex = content.indexOf("[" + prompt + "结束]");
                     if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
-                        var trimmedContent = content.substring(startIndex + 7, endIndex).trim().split("\n").slice(1).join("\n");
+                        var trimmedContent = content.substring(startIndex + prompt.length + 2, endIndex).trim().split("\n").slice(1).join("\n");
                         copyToClipboard(trimmedContent);
-                        alert("复制成功,请粘贴到chatgpt的输入框发送");
+                        alert("已复制 " + prompt + " 到剪贴板！");
                     } else {
                         alert("未找到指定内容！");
                     }
@@ -35,6 +35,11 @@
     </script>
 </head>
 <body>
-    <button onclick="readFile()">复制 小说家 提示词</button>
+    <button onclick="readFile('小说家提示词')">先复制 小说家提示词</button>
+    <button onclick="readFile('同类歌曲推荐人提示词')">先复制 同类歌曲推荐人提示词</button>
+    <button onclick="readFile('免费咨询律师提示词')">先复制 免费咨询律师提示词</button>
+    <button onclick="readFile('python老师提示词')">先复制 python老师提示词</button>
+    <!-- 可以根据需要增加更多按钮 -->
+
 </body>
 </html>
