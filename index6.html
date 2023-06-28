@@ -4,54 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatGPT 页面</title>
-</head>
-<body>
     <script>
-        // 读取 url.txt 文件并获取镜像站链接列表
-        fetch('./url.txt')
-            .then(response => response.text())
-            .then(data => {
-                const urls = data.trim().split('\n');
-
-                // 选择一个随机的链接地址
-                const randomIndex = Math.floor(Math.random() * urls.length);
-                const selectedUrl = urls[randomIndex];
-
-                // 跳转至选中的链接地址
-                window.location.href = selectedUrl;
-            })
-            .catch(error => console.error('发生错误:', error));
-    </script>
-
-    <script>
-        // 读取 prompt.txt 文件并获取提示词列表
-        fetch('./prompt.txt')
-            .then(response => response.text())
-            .then(data => {
-                const prompts = data.match(/\[提示词.+?\](?:[\s\S](?!\[提示词.+?\]))*/g);
-
-                // 判断是否找到匹配的提示词
-                if (prompts.length > 0) {
-                    const selectedPrompt = prompts[0];
-                    const promptContent = selectedPrompt.replace(/\[提示词.*?\]/, '');
-
-                    // 在页面载入完毕后执行
-                    window.addEventListener('load', function() {
-                        // 查找聊天输入框并插入提示词内容
+        function insertPrompts() {
+            fetch('./prompt.txt')
+                .then(response => response.text())
+                .then(data => {
+                    const prompts = data.match(/\[提示词.+?\](?:[\s\S](?!\[提示词.+?\]))*/g);
+                    
+                    if (prompts.length > 1) { // 选择 [提示词2]
+                        const selectedPrompt = prompts[1];
+                        const promptContent = selectedPrompt.replace(/\[提示词.*?\]/, '');
+    
                         const inputElement = document.querySelector('input[type="text"], textarea');
                         if (inputElement) {
                             inputElement.value = promptContent;
-
-                            // 模拟发送按钮点击事件
+    
                             const sendButton = document.querySelector('button[type="submit"]');
                             if (sendButton) {
                                 sendButton.click();
                             }
                         }
-                    });
-                }
-            })
-            .catch(error => console.error('发生错误:', error));
+                    }
+                })
+                .catch(error => console.error('发生错误:', error));
+        }
+    </script>
+</head>
+<body>
+    <script>
+        window.addEventListener('load', function() {
+            fetch('./url.txt')
+                .then(response => response.text())
+                .then(data => {
+                    const urls = data.trim().split('\n');
+    
+                    const randomIndex = Math.floor(Math.random() * urls.length);
+                    const selectedUrl = urls[randomIndex];
+    
+                    window.location.href = selectedUrl;
+                })
+                .catch(error => console.error('发生错误:', error));
+        });
+    </script>
+
+    <script>
+        window.addEventListener('load', insertPrompts);
     </script>
 </body>
 </html>
