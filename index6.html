@@ -26,7 +26,8 @@
                             var button = document.createElement("button");
                             button.innerHTML = "先复制 " + prompt;
                             button.onclick = function() {
-                                copyPromptToClipboard(this.innerHTML.substring(6));
+                                var prompt = this.innerHTML.substring(6);
+                                copyPromptToClipboard(prompt);
                             }
                             document.body.appendChild(button);
                         }
@@ -46,7 +47,7 @@
                 if (rawFile.readyState === 4 && rawFile.status === 200) {
                     var content = rawFile.responseText;
                     var startIndex = content.indexOf("[" + prompt + "开始]");
-                    var endIndex = content.indexOf("[" + prompt + "结束]");
+                    var endIndex = content.indexOf("[" + prompt + "结束]", startIndex);
                     if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
                         var trimmedContent = content.substring(startIndex + prompt.length + 2, endIndex).trim().split("\n").slice(1).join("\n");
                         copyToClipboard(trimmedContent);
