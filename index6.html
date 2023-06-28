@@ -12,22 +12,30 @@
             document.body.removeChild(textarea);
         }
 
-        function readFile() {
+        function readPrompt() {
             var file = "prompt.txt";
             var rawFile = new XMLHttpRequest();
             rawFile.open("GET", file, true);
             rawFile.onreadystatechange = function () {
                 if (rawFile.readyState === 4 && rawFile.status === 200) {
                     var content = rawFile.responseText;
-                    copyToClipboard(content);
-                    alert("文件内容已复制到剪贴板！");
+                    var startTag = "[提示词2]";
+                    var endTag = "[";
+                    var startIndex = content.indexOf(startTag) + startTag.length;
+                    var endIndex = content.indexOf(endTag, startIndex);
+                    var prompt = content.substring(startIndex, endIndex);
+                    copyToClipboard(prompt.trim());
+                    alert("提示词已复制到剪贴板！");
                 }
             }
             rawFile.send();
         }
+
+        window.onload = function () {
+            readPrompt();
+        };
     </script>
 </head>
 <body>
-    <button onclick="readFile()">点击读取文件并复制到剪贴板</button>
 </body>
 </html>
