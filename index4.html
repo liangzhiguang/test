@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>先复制角色提示词后粘贴到Ai输入框发送</title>
     <script>
         function copyToClipboard(text) {
             var textarea = document.createElement("textarea");
@@ -51,7 +51,7 @@
             if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
                 var trimmedContent = content.substring(startIndex + promptName.length + 2, endIndex).trim().split("\n").slice(1).join("\n");
                 copyToClipboard(trimmedContent);
-                alert("已复制 " + promptName + " 到剪贴板！");
+                alert("然后粘贴 " + promptName + " 到ChatGPT输入框,点发送");
             } else {
                 alert("未找到指定内容！");
             }
