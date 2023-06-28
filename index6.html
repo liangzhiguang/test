@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>读取文件并复制到剪贴板</title>
+    <title></title>
     <script>
         function copyToClipboard(text) {
             var textarea = document.createElement("textarea");
@@ -24,7 +24,7 @@
                     if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
                         var trimmedContent = content.substring(startIndex + 7, endIndex).trim().split("\n").slice(1).join("\n");
                         copyToClipboard(trimmedContent);
-                        alert("文件内容已复制到剪贴板！");
+                        alert("请粘贴到chatgpt的输入框发送");
                     } else {
                         alert("未找到指定内容！");
                     }
