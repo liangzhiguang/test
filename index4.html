@@ -29,6 +29,10 @@
     .red {
       color: red;
     }
+
+    table {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -40,7 +44,7 @@
   <div class="big-text">几千人在线..</div>
   <div class="big-text">稍候十几秒..</div>
 
-  <table>
+  <table id="url-table">
     <thead>
       <tr>
         <th>Ai网址</th>
@@ -137,6 +141,10 @@
             });
         });
 
+        // 显示URL列表
+        const urlTable = document.getElementById('url-table');
+        urlTable.style.display = 'block';
+
         // 定时跳转到最快或第二快的URL
         setInterval(() => {
           const now = new Date();
@@ -146,34 +154,27 @@
           if (lastDigit % 2 === 1 && fastestUrls.length > 0) {
             const randomIndex = Math.floor(Math.random() * fastestUrls.length);
             openWindowWithoutPopup(fastestUrls[randomIndex]);
-          } else if ((lastDigit % 2 === 0 || lastDigit === 0) && slowestUrls.length > 0) {
-            let urlToOpen = slowestUrls[0];
-            if (slowestUrls.length > 1) {
-              urlToOpen = slowestUrls[1];
-            }
-            openWindowWithoutPopup(urlToOpen);
+          } else if ((lastDigit % 2 === 0 || slowestUrls.length === 0) && fastestUrls.length > 1) {
+            const randomIndex = Math.floor(Math.random() * (fastestUrls.length - 1));
+            openWindowWithoutPopup(fastestUrls[randomIndex]);
+          } else if (slowestUrls.length > 0) {
+            const randomIndex = Math.floor(Math.random() * slowestUrls.length);
+            openWindowWithoutPopup(slowestUrls[randomIndex]);
           }
         }, CHECK_INTERVAL_MS);
-      });
 
-    // 打开新窗口，排除弹出窗口和广告
-    function openWindowWithoutPopup(url) {
-      const popupWindow = window.open(url, '_blank');
-
-      // 检查是否有弹出窗口被阻止
-      if (popupWindow && !popupWindow.closed && typeof popupWindow.outerHeight !== 'undefined' && typeof popupWindow.outerWidth !== 'undefined' && popupWindow.outerHeight !== 0 && popupWindow.outerWidth !== 0) {
-        popupWindow.addEventListener('beforeunload', function (event) {
-          event.preventDefault();
-          event.stopPropagation();
-        });
-      } else {
-        const urlsToOpen = fastestUrls.concat(slowestUrls).filter(u => u !== url);
-        if (urlsToOpen.length > 0) {
-          const randomIndex = Math.floor(Math.random() * urlsToOpen.length);
-          window.location.href = urlsToOpen[randomIndex];
+        // 打开新窗口并阻止弹出窗口被拦截
+        function openWindowWithoutPopup(url) {
+          const newWindow = window.open(url, '_blank');
+          if (newWindow) {
+            newWindow.opener = null;
+            newWindow.focus();
+          }
         }
-      }
-    }
+      })
+      .catch(error => {
+        console.error('无法获取URL列表：', error);
+      });
   </script>
 </body>
 </html>
