@@ -128,48 +128,43 @@
           document.body.removeChild(textarea);
         }
 
-        function readFile() {
-          var file = "prompt.txt";
-          var rawFile = new XMLHttpRequest();
-          rawFile.open("GET", file, true);
-          rawFile.onreadystatechange = function () {
-            if (rawFile.readyState === 4 && rawFile.status === 200) {
-              var content = rawFile.responseText;
-              var prompts = content.match(/\[(.*?)开始\]/g);
+        function loadPromptButtons() {
+          fetch('prompt.txt')
+            .then(response => response.text())
+            .then(text => {
+              const prompts = text.match(/\[(.*?)开始\]/g);
               if (prompts && prompts.length > 0) {
-                var buttonContainer = document.getElementById("button-container");
-                buttonContainer.innerHTML = ""; // 清空容器
+                const buttonContainer = document.getElementById('button-container');
+                buttonContainer.innerHTML = '';
 
-                prompts.forEach(function(prompt) {
-                  var promptName = prompt.substring(1, prompt.length - 3);
+                prompts.forEach(prompt => {
+                  const promptName = prompt.substring(1, prompt.length - 3);
 
                   // 创建按钮元素
-                  var button = document.createElement("button");
-                  button.textContent = "先复制 " + promptName;
-                  button.onclick = function() {
-                    copyPromptToClipboard(content, promptName);
+                  const button = document.createElement('button');
+                  button.textContent = '复制 ' + promptName;
+                  button.onclick = () => {
+                    copyPromptToClipboard(text, promptName);
                   };
 
                   // 添加按钮到容器中
                   buttonContainer.appendChild(button);
                 });
               } else {
-                alert("未找到指定内容！");
+                alert('未找到指定内容！');
               }
-            }
-          }
-          rawFile.send();
+            });
         }
 
         function copyPromptToClipboard(content, promptName) {
-          var startIndex = content.indexOf("[" + promptName + "开始]");
-          var endIndex = content.indexOf("[" + promptName + "结束]");
+          const startIndex = content.indexOf('[' + promptName + '开始]');
+          const endIndex = content.indexOf('[' + promptName + '结束]');
           if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
-            var trimmedContent = content.substring(startIndex + promptName.length + 2, endIndex).trim().split("\n").slice(1).join("\n");
+            const trimmedContent = content.substring(startIndex + promptName.length + 2, endIndex).trim().split('\n').slice(1).join('\n');
             copyToClipboard(trimmedContent);
-            alert("已复制 " + promptName + " 到剪贴板！");
+            alert('已复制 ' + promptName + ' 到剪贴板！');
           } else {
-            alert("未找到指定内容！");
+            alert('未找到指定内容！');
           }
         }
 
@@ -188,14 +183,8 @@
           }
         }, CHECK_INTERVAL_MS);
 
-        // 您提供的代码开始
-        function loadAfterButtonClick() {
-          readFile();
-        }
-        // 您提供的代码结束
-
-        // 在页面加载完成后执行loadAfterButtonClick()函数
-        window.onload = loadAfterButtonClick;
+        // 在页面加载完成后执行loadPromptButtons()函数
+        window.onload = loadPromptButtons;
       });
   </script>
 </body>
