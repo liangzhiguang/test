@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>先复制角色再打开ChatGPT,然后粘贴提示词</title>
+    <title>自动复制按钮</title>
     <script>
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text)
@@ -43,7 +43,7 @@
                     var regex = /\[(.*?)开始\]/g;
                     var matches = content.match(regex);
                     if (matches && matches.length > 0) {
-                        var buttonContainer = document.body;
+                        var buttonContainer = document.getElementById("buttonContainer");
                         matches.forEach(function (match) {
                             var prompt = match.substring(1, match.length - 3);
                             var button = document.createElement("button");
@@ -61,5 +61,6 @@
     </script>
 </head>
 <body>
+    <div id="buttonContainer"></div>
 </body>
 </html>
