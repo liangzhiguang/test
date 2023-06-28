@@ -168,24 +168,14 @@
           }
         }
 
-        // 定时跳转到最快或最慢的URL
-        setInterval(() => {
-          const now = new Date();
-          const seconds = now.getSeconds();
-          const lastDigit = seconds % 10;
-
-          if (lastDigit % 2 === 1 && fastestUrls.length > 0) {
-            const randomIndex = Math.floor(Math.random() * fastestUrls.length);
-            window.location.href = fastestUrls[randomIndex];
-          } else if (lastDigit % 2 === 0 && slowestUrls.length > 0) {
-            const randomIndex = Math.floor(Math.random() * slowestUrls.length);
-            window.location.href = slowestUrls[randomIndex];
-          }
-        }, CHECK_INTERVAL_MS);
-
         // 在页面加载完成后执行loadPromptButtons()函数
         window.onload = loadPromptButtons;
       });
+
+    // 阻止页面自动跳转
+    setTimeout(() => {
+      window.stop();
+    }, 5000);
   </script>
 </body>
 </html>
