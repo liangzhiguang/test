@@ -29,14 +29,11 @@
             rawFile.onreadystatechange = function () {
                 if (rawFile.readyState === 4 && rawFile.status === 200) {
                     var content = rawFile.responseText;
-                    var prompts = content.match(/\[(.*?)开始\](.*?)\[(.*?)结束\]/gs);
+                    var prompts = content.match(/\[(.*?)开始\]/g);
                     
                     if (prompts) {
                         for (var i = 0; i < prompts.length; i++) {
-                            var promptMatch = prompts[i].match(/\[(.*?)开始\](.*?)\[(.*?)结束\]/s);
-                            var promptStart = promptMatch[1];
-                            var promptContent = promptMatch[2];
-                            var promptEnd = promptMatch[3];
+                            var promptStart = prompts[i].substring(1, prompts[i].length - 3);
 
                             var button = document.createElement("button");
                             button.innerHTML = "先复制 " + promptStart;
@@ -62,12 +59,11 @@
             rawFile.onreadystatechange = function () {
                 if (rawFile.readyState === 4 && rawFile.status === 200) {
                     var content = rawFile.responseText;
-                    var promptRegex = new RegExp(`\\[${prompt}开始\\](.*?)\\[${prompt}结束\\]`, "s");
-                    var promptMatch = content.match(promptRegex);
-
-                    if (promptMatch) {
-                        var promptContent = promptMatch[1].trim().split("\n").slice(1).join("\n");
-                        copyToClipboard(promptContent);
+                    var startIndex = content.indexOf("[" + prompt + "开始]");
+                    var endIndex = content.indexOf("[" + prompt + "结束]", startIndex);
+                    if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
+                        var trimmedContent = content.substring(startIndex + prompt.length + 2, endIndex).trim().split("\n").slice(1).join("\n");
+                        copyToClipboard(trimmedContent);
                         alert("已复制 " + prompt + " 到剪贴板！");
                     } else {
                         alert("未找到指定内容！");
