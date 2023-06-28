@@ -36,6 +36,17 @@
   </style>
 </head>
 
+<body>
+  <div class="big-text">永远免费</div>
+  <div class="big-text">合作方有广告</div>
+  <div class="big-text">不要点 别信它</div>
+  <div class="big-text">勿注册 勿登录</div>
+  <div class="big-text red">勿扫码 勿捐赏</div>
+  <div class="big-text">几千人在线..</div>
+  <div class="big-text">稍候十几秒..</div>
+
+  <div id="button-container"></div>
+
   <script>
     const TIMEOUT_MS = 12000; // 请求超时时间（毫秒）
     const CHECK_INTERVAL_MS = 1000; // 检查间隔时间（毫秒）
@@ -108,58 +119,58 @@
             });
         });
 
-               function copyToClipboard(text) {
-            var textarea = document.createElement("textarea");
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand("copy");
-            document.body.removeChild(textarea);
+        function copyToClipboard(text) {
+          var textarea = document.createElement("textarea");
+          textarea.value = text;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textarea);
         }
 
-               function readFile() {
-            var file = "prompt.txt";
-            var rawFile = new XMLHttpRequest();
-            rawFile.open("GET", file, true);
-            rawFile.onreadystatechange = function () {
-                if (rawFile.readyState === 4 && rawFile.status === 200) {
-                    var content = rawFile.responseText;
-                    var prompts = content.match(/\[(.*?)开始\]/g);
-                    if (prompts && prompts.length > 0) {
-                        var buttonContainer = document.getElementById("button-container");
-                        buttonContainer.innerHTML = ""; // 清空容器
+        function readFile() {
+          var file = "prompt.txt";
+          var rawFile = new XMLHttpRequest();
+          rawFile.open("GET", file, true);
+          rawFile.onreadystatechange = function () {
+            if (rawFile.readyState === 4 && rawFile.status === 200) {
+              var content = rawFile.responseText;
+              var prompts = content.match(/\[(.*?)开始\]/g);
+              if (prompts && prompts.length > 0) {
+                var buttonContainer = document.getElementById("button-container");
+                buttonContainer.innerHTML = ""; // 清空容器
 
-                        prompts.forEach(function(prompt) {
-                            var promptName = prompt.substring(1, prompt.length - 3);
+                prompts.forEach(function(prompt) {
+                  var promptName = prompt.substring(1, prompt.length - 3);
 
-                            // 创建按钮元素
-                            var button = document.createElement("button");
-                            button.textContent = "先复制 " + promptName;
-                            button.onclick = function() {
-                                copyPromptToClipboard(content, promptName);
-                            };
+                  // 创建按钮元素
+                  var button = document.createElement("button");
+                  button.textContent = "先复制 " + promptName;
+                  button.onclick = function() {
+                    copyPromptToClipboard(content, promptName);
+                  };
 
-                            // 添加按钮到容器中
-                            buttonContainer.appendChild(button);
-                        });
-                    } else {
-                        alert("未找到指定内容！");
-                    }
-                }
-            }
-            rawFile.send();
-        }
-
-               function copyPromptToClipboard(content, promptName) {
-            var startIndex = content.indexOf("[" + promptName + "开始]");
-            var endIndex = content.indexOf("[" + promptName + "结束]");
-            if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
-                var trimmedContent = content.substring(startIndex + promptName.length + 2, endIndex).trim().split("\n").slice(1).join("\n");
-                copyToClipboard(trimmedContent);
-                alert("已复制 " + promptName + " 到剪贴板！");
-            } else {
+                  // 添加按钮到容器中
+                  buttonContainer.appendChild(button);
+                });
+              } else {
                 alert("未找到指定内容！");
+              }
             }
+          }
+          rawFile.send();
+        }
+
+        function copyPromptToClipboard(content, promptName) {
+          var startIndex = content.indexOf("[" + promptName + "开始]");
+          var endIndex = content.indexOf("[" + promptName + "结束]");
+          if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
+            var trimmedContent = content.substring(startIndex + promptName.length + 2, endIndex).trim().split("\n").slice(1).join("\n");
+            copyToClipboard(trimmedContent);
+            alert("已复制 " + promptName + " 到剪贴板！");
+          } else {
+            alert("未找到指定内容！");
+          }
         }
 
         // 定时跳转到最快或最慢的URL
@@ -176,21 +187,16 @@
             window.location.href = slowestUrls[randomIndex];
           }
         }, CHECK_INTERVAL_MS);
+
+        // 您提供的代码开始
+        function loadAfterButtonClick() {
+          readFile();
+        }
+        // 您提供的代码结束
+
+        // 在页面加载完成后执行loadAfterButtonClick()函数
+        window.onload = loadAfterButtonClick;
       });
-
-    // 您提供的代码开始
-    // 在合适的位置插入您的代码
-    // 您提供的代码结束
   </script>
-<body onload="readFile()">
-  <div class="big-text">永远免费</div>
-  <div class="big-text">合作方有广告</div>
-  <div class="big-text">不要点 别信它</div>
-  <div class="big-text">勿注册 勿登录</div>
-  <div class="big-text red">勿扫码 勿捐赏</div>
-  <div class="big-text">几千人在线..</div>
-  <div class="big-text">稍候十几秒..</div>
-
-  <div id="button-container"></div>
 </body>
 </html>
