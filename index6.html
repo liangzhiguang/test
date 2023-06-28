@@ -22,7 +22,7 @@
                     var startIndex = content.indexOf("[提示词2开始]");
                     var endIndex = content.indexOf("[提示词2结束]");
                     if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
-                        var trimmedContent = content.substring(startIndex + 7, endIndex);
+                        var trimmedContent = content.substring(startIndex + 7, endIndex).trim();
                         copyToClipboard(trimmedContent);
                         alert("文件内容已复制到剪贴板！");
                     } else {
@@ -35,6 +35,6 @@
     </script>
 </head>
 <body>
-    <button onclick="readFile()">复制提示词2</button>
+    <button onclick="readFile()">点击复制提示词2到剪贴板</button>
 </body>
 </html>
