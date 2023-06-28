@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title></title>
     <script>
@@ -12,11 +13,57 @@
             document.body.removeChild(textarea);
         }
 
-        function readFile(prompt) {
+        function readFile() {
             var file = "prompt.txt";
             var rawFile = new XMLHttpRequest();
             rawFile.open("GET", file, true);
-            rawFile.onreadystatechange = function () {
+            rawFile.onreadystatechange = function() {
+                if (rawFile.readyState === 4 && rawFile.status === 200) {
+                    var content = rawFile.responseText;
+                    var prompts = extractPrompts(content);
+                    generateButtons(prompts);
+                }
+            }
+            rawFile.send();
+        }
+
+        function extractPrompts(content) {
+            var promptStart = "[";
+            var promptEnd = "开始]";
+            var prompts = [];
+            var startIndex = content.indexOf(promptStart);
+            while (startIndex !== -1) {
+                var endIndex = content.indexOf(promptEnd, startIndex);
+                if (endIndex !== -1) {
+                    var prompt = content.substring(startIndex + promptStart.length, endIndex);
+                    prompts.push(prompt);
+                    startIndex = content.indexOf(promptStart, endIndex);
+                } else {
+                    break;
+                }
+            }
+            return prompts;
+        }
+
+        function generateButtons(prompts) {
+            var buttonContainer = document.getElementById("button-container");
+            buttonContainer.innerHTML = "";
+
+            prompts.forEach(function(prompt) {
+                var button = document.createElement("button");
+                button.innerText = "先复制 " + prompt;
+                button.onclick = function() {
+                    copyPromptToClipboard(prompt);
+                };
+                buttonContainer.appendChild(button);
+            });
+        }
+
+        function copyPromptToClipboard(prompt) {
+            var file = "prompt.txt";
+            var rawFile = new XMLHttpRequest();
+            rawFile.open("GET", file, true);
+            rawFile.onreadystatechange = function() {
                 if (rawFile.readyState === 4 && rawFile.status === 200) {
                     var content = rawFile.responseText;
                     var startIndex = content.indexOf("[" + prompt + "开始]");
@@ -32,14 +79,15 @@
             }
             rawFile.send();
         }
+
+        window.onload = function() {
+            readFile();
+        };
     </script>
 </head>
-<body>
-    <button onclick="readFile('小说家提示词')">先复制 小说家提示词</button>
-    <button onclick="readFile('同类歌曲推荐人提示词')">先复制 同类歌曲推荐人提示词</button>
-    <button onclick="readFile('免费咨询律师提示词')">先复制 免费咨询律师提示词</button>
-    <button onclick="readFile('python老师提示词')">先复制 python老师提示词</button>
-    <!-- 可以根据需要增加更多按钮 -->
 
+<body>
+    <div id="button-container"></div>
 </body>
+
 </html>
