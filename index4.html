@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>自动复制按钮</title>
+    <title></title>
     <script>
         function copyToClipboard(text) {
-            navigator.clipboard.writeText(text)
-                .then(function () {
-                    alert("已复制到剪贴板！");
-                })
-                .catch(function (error) {
-                    console.error("复制失败:", error);
-                });
+            var textarea = document.createElement("textarea");
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
         }
 
         function readFile(prompt) {
@@ -25,34 +24,22 @@
                     if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
                         var trimmedContent = content.substring(startIndex + prompt.length + 2, endIndex).trim().split("\n").slice(1).join("\n");
                         copyToClipboard(trimmedContent);
+                        alert("已复制 " + prompt + " 到剪贴板！");
                     } else {
                         alert("未找到指定内容！");
                     }
                 }
-            };
+            }
             rawFile.send();
         }
-
-        window.addEventListener('DOMContentLoaded', function () {
-            var buttons = [
-                { prompt: '小说家提示词', id: 'btnPromptWriter' },
-                { prompt: '同类歌曲推荐人提示词', id: 'btnPromptSong' },
-                { prompt: '免费咨询律师提示词', id: 'btnPromptLawyer' },
-                { prompt: 'python老师提示词', id: 'btnPromptPython' }
-            ];
-
-            buttons.forEach(function (buttonInfo) {
-                var button = document.createElement("button");
-                button.textContent = "先复制 " + buttonInfo.prompt;
-                button.addEventListener('click', function () {
-                    readFile(buttonInfo.prompt);
-                });
-                document.getElementById("buttonContainer").appendChild(button);
-            });
-        });
     </script>
 </head>
 <body>
-    <div id="buttonContainer"></div>
+    <button onclick="readFile('小说家提示词')">先复制 小说家提示词</button>
+    <button onclick="readFile('同类歌曲推荐人提示词')">先复制 同类歌曲推荐人提示词</button>
+    <button onclick="readFile('免费咨询律师提示词')">先复制 免费咨询律师提示词</button>
+    <button onclick="readFile('python老师提示词')">先复制 python老师提示词</button>
+    <!-- 可以根据需要增加更多按钮 -->
+
 </body>
 </html>
