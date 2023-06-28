@@ -24,7 +24,7 @@
                     if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
                         var trimmedContent = content.substring(startIndex + prompt.length + 2, endIndex).trim().split("\n").slice(1).join("\n");
                         copyToClipboard(trimmedContent);
-                        alert("已复制 " + prompt + " 到剪贴板！");
+                        alert("然后,一键打开ChatGPT粘贴 " + prompt + "到输入框发送");
                     } else {
                         alert("未找到指定内容！");
                     }
