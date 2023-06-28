@@ -12,7 +12,33 @@
             document.body.removeChild(textarea);
         }
 
-        function readFile(prompt) {
+        function readFile() {
+            var file = "prompt.txt";
+            var rawFile = new XMLHttpRequest();
+            rawFile.open("GET", file, true);
+            rawFile.onreadystatechange = function () {
+                if (rawFile.readyState === 4 && rawFile.status === 200) {
+                    var content = rawFile.responseText;
+                    var prompts = content.match(/\[(.*?)开始\]/g);
+                    if (prompts) {
+                        for (var i = 0; i < prompts.length; i++) {
+                            var prompt = prompts[i].substring(1, prompts[i].length - 3);
+                            var button = document.createElement("button");
+                            button.innerHTML = "先复制 " + prompt;
+                            button.onclick = function() {
+                                copyPromptToClipboard(this.innerHTML.substring(6));
+                            }
+                            document.body.appendChild(button);
+                        }
+                    } else {
+                        alert("未找到任何提示词！");
+                    }
+                }
+            }
+            rawFile.send();
+        }
+
+        function copyPromptToClipboard(prompt) {
             var file = "prompt.txt";
             var rawFile = new XMLHttpRequest();
             rawFile.open("GET", file, true);
@@ -24,7 +50,7 @@
                     if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
                         var trimmedContent = content.substring(startIndex + prompt.length + 2, endIndex).trim().split("\n").slice(1).join("\n");
                         copyToClipboard(trimmedContent);
-                        alert("然后,一键打开ChatGPT粘贴 " + prompt + "到输入框,点发送");
+                        alert("已复制 " + prompt + " 到剪贴板！");
                     } else {
                         alert("未找到指定内容！");
                     }
@@ -35,11 +61,10 @@
     </script>
 </head>
 <body>
-    <button onclick="readFile('小说家提示词')">先复制 小说家提示词</button>
-    <button onclick="readFile('同类歌曲推荐人提示词')">先复制 同类歌曲推荐人提示词</button>
-    <button onclick="readFile('免费咨询律师提示词')">先复制 免费咨询律师提示词</button>
-    <button onclick="readFile('python老师提示词')">先复制 python老师提示词</button>
-    <!-- 可以根据需要增加更多按钮 -->
+    <button onclick="readFile()">检测并生成按钮</button>
 
+    <script>
+        readFile();
+    </script>
 </body>
 </html>
