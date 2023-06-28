@@ -19,10 +19,10 @@
             rawFile.onreadystatechange = function () {
                 if (rawFile.readyState === 4 && rawFile.status === 200) {
                     var content = rawFile.responseText;
-                    var startIndex = content.indexOf("[提示词2开始]");
-                    var endIndex = content.indexOf("[提示词2结束]");
+                    var startIndex = content.indexOf("[提示词1开始]");
+                    var endIndex = content.indexOf("[提示词1结束]");
                     if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
-                        var trimmedContent = content.substring(startIndex + 7, endIndex).trim();
+                        var trimmedContent = content.substring(startIndex + 7, endIndex).trim().split("\n").slice(1).join("\n");
                         copyToClipboard(trimmedContent);
                         alert("文件内容已复制到剪贴板！");
                     } else {
@@ -35,6 +35,6 @@
     </script>
 </head>
 <body>
-    <button onclick="readFile()">点击复制提示词2到剪贴板</button>
+    <button onclick="readFile()">点击复制 提示词1</button>
 </body>
 </html>
