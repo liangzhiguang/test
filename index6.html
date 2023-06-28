@@ -1,126 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
+
 <head>
-    <title>ChatGPT Prompt Automation</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT 页面</title>
+    <script>
+        function insertPrompts() {
+            fetch('./prompt.txt')
+                .then(response => response.text())
+                .then(data => {
+                    const prompts = data.match(/\[提示词.+?\](?:[\s\S](?!\[提示词.+?\]))*/g);
 
-        h1 {
-            text-align: center;
-        }
+                    if (prompts.length > 1) { // 选择 [提示词2]
+                        const selectedPrompt = prompts[1];
+                        const promptContent = selectedPrompt.replace(/\[提示词.*?\]/, '');
 
-        #loadingMessage {
-            text-align: center;
-            margin-top: 100px;
-        }
+                        const inputElement = document.querySelector('input[type="text"], textarea');
+                        if (inputElement) {
+                            inputElement.value = promptContent;
 
-        #errorMessage {
-            color: red;
-            text-align: center;
-            margin-top: 100px;
+                            const sendButton = document.querySelector('button[type="submit"]');
+                            if (sendButton) {
+                                sendButton.click();
+                            }
+                        }
+                    }
+                })
+                .catch(error => console.error('发生错误:', error));
         }
-    </style>
+    </script>
 </head>
+
 <body>
-    <h1>ChatGPT Prompt Automation</h1>
+    <script>
+        window.addEventListener('load', function () {
+            fetch('./url.txt')
+                .then(response => response.text())
+                .then(data => {
+                    const urls = data.trim().split('\n');
 
-    <div id="loadingMessage">Loading...</div>
+                    const randomIndex = Math.floor(Math.random() * urls.length);
+                    const selectedUrl = urls[randomIndex];
 
-    <div id="errorMessage"></div>
+                    window.location.href = selectedUrl;
+                })
+                .catch(error => console.error('发生错误:', error));
+        });
+    </script>
 
     <script>
-        function redirectToChat() {
-            var xhr = new XMLHttpRequest();
-            
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        var url = xhr.responseText;
-                        window.location.href = url;
-                    } else {
-                        document.getElementById('loadingMessage').style.display = 'none';
-                        document.getElementById('errorMessage').textContent = 'Failed to retrieve ChatGPT URL.';
-                    }
-                }
-            };
-            
-            xhr.open('GET', 'url.txt', true);
-            xhr.send();
-        }
-        
-        window.onload = function () {
-            redirectToChat();
-        };
-
-      <iframe id="chatFrame" src="" onload="injectPrompts()" style="display: none;"></iframe>
-
-    <div id="loadingMessage">Loading...</div>
-
-    <div id="errorMessage"></div>
-
-    <script>
-        var prompts = [];
-
-        function loadPrompts() {
-            var xhr = new XMLHttpRequest();
-
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        prompts = xhr.responseText.split('\n');
-                        var index = Math.floor(Math.random() * prompts.length);
-                        document.getElementById('chatFrame').src = prompts[index];
-                    } else {
-                        document.getElementById('loadingMessage').style.display = 'none';
-                        document.getElementById('errorMessage').textContent = 'Failed to retrieve ChatGPT URL list.';
-                    }
-                }
-            };
-
-            xhr.open('GET', 'url.txt', true);
-            xhr.send();
-        }
-
-        function injectPrompts() {
-            var chatFrame = document.getElementById('chatFrame').contentWindow.document;
-            var inputElements = chatFrame.getElementsByTagName('input');
-
-            if (inputElements.length > 0) {
-                var inputElement = inputElements[0];
-                var prompt = prompts.pop();
-                var startWord = '[提示词2]';
-                var endWord = '[提示词3]';
-                var content = extractContent(prompt, startWord, endWord);
-
-                if (content) {
-                    inputElement.value = content;
-                    inputElement.form.submit();
-                } else {
-                    document.getElementById('loadingMessage').style.display = 'none';
-                    document.getElementById('errorMessage').textContent = 'Failed to extract prompt content.';
-                }
-            } else {
-                setTimeout(injectPrompts, 1000);
-            }
-        }
-              // 提取内容函数
-        function extractContent(text, startWord, endWord) {
-            var pattern = new RegExp("\\[" + startWord + "\\](.*?)\\[" + endWord + "\\]\\b", "s");
-            var matches = text.match(pattern);
-            if (matches && matches.length > 1) {
-                return matches[1].trim();
-            } else {
-                return null;
-            }
-        }
-
-        window.onload = function () {
-            loadPrompts();
-        };
+        // 在聊天输入框载入后插入提示词
+        setTimeout(insertPrompts, 3000); // 增加 3 秒的延迟以确保输入框已经加载完毕
     </script>
 </body>
+
 </html>
