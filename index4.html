@@ -1,154 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>为了学习永远免费,勿信一切广告</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f1f1f1;
-    }
+    <title>先复制角色再打开ChatGPT,然后粘贴提示词</title>
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text)
+                .then(function () {
+                    alert("已复制到剪贴板！");
+                })
+                .catch(function (error) {
+                    console.error("复制失败:", error);
+                });
+        }
 
-    h1, table {
-      display: none;
-    }
+        function readFile(prompt) {
+            var file = "prompt.txt";
+            var rawFile = new XMLHttpRequest();
+            rawFile.open("GET", file, true);
+            rawFile.onreadystatechange = function () {
+                if (rawFile.readyState === 4 && rawFile.status === 200) {
+                    var content = rawFile.responseText;
+                    var regex = new RegExp("\\[" + prompt + "开始\\][\\s\\S]*?\\[" + prompt + "结束\\]");
+                    var matches = content.match(regex);
+                    if (matches && matches.length > 0) {
+                        var trimmedContent = matches[0].replace("[" + prompt + "开始]", "").replace("[" + prompt + "结束]", "").trim();
+                        copyToClipboard(trimmedContent);
+                    } else {
+                        alert("未找到指定内容！");
+                    }
+                }
+            };
+            rawFile.send();
+        }
 
-    .big-text {
-      font-size: 12vw;
-      text-align: center;
-      margin: 1vw;
-    }
-
-    .green {
-      color: green;
-    }
-
-    .red {
-      color: red;
-    }
-  </style>
+        window.addEventListener('DOMContentLoaded', function () {
+            var file = "prompt.txt";
+            var rawFile = new XMLHttpRequest();
+            rawFile.open("GET", file, true);
+            rawFile.onreadystatechange = function () {
+                if (rawFile.readyState === 4 && rawFile.status === 200) {
+                    var content = rawFile.responseText;
+                    var regex = /\[(.*?)开始\]/g;
+                    var matches = content.match(regex);
+                    if (matches && matches.length > 0) {
+                        var buttonContainer = document.body;
+                        matches.forEach(function (match) {
+                            var prompt = match.substring(1, match.length - 3);
+                            var button = document.createElement("button");
+                            button.textContent = "先复制 " + prompt;
+                            button.addEventListener('click', function () {
+                                readFile(prompt);
+                            });
+                            buttonContainer.appendChild(button);
+                        });
+                    }
+                }
+            };
+            rawFile.send();
+        });
+    </script>
 </head>
 <body>
-  <div class="big-text">永远免费</div>
-  <div class="big-text">合作方有广告</div>
-  <div class="big-text">不要点别信它</div>
-  <div class="big-text red">勿注册勿登录</div>
-  <div class="big-text">勿扫码勿捐赏</div>
-  <div class="big-text">几千人在线..</div>
-  <div class="big-text">稍候十几秒..</div>
-
-  </table>
-
-  <script>
-    const TIMEOUT_MS = 10000; // 请求超时时间（毫秒）
-    const CHECK_INTERVAL_MS = 1000; // 检查间隔时间（毫秒）
-    const QR_CODE_REGEX = /二维码/; // 用于检测是否含有二维码的正则表达式
-
-    // 获取需要检查的URL列表
-    fetch('url.txt')
-      .then(response => response.text())
-      .then(text => {
-        const urls = text.split('\n');
-        const tableBody = document.getElementById('table-body');
-        const fastestUrls = []; // 用于记录响应最快的URL列表
-        const slowestUrls = []; // 用于记录响应最慢的URL列表
-
-        // 遍历URL列表，逐个检查
-        urls.forEach(url => {
-          const row = document.createElement('tr');
-          const urlCell = document.createElement('td');
-          urlCell.textContent = '正在检查...';
-          row.appendChild(urlCell);
-          const statusCell = document.createElement('td');
-
-          // 发起HTTP请求，检查URL响应时间
-          const controller = new AbortController(); // 创建一个AbortController实例，用于设置超时时间
-          const timeoutId = setTimeout(() => {
-            controller.abort(); // 超时后中止请求
-          }, TIMEOUT_MS);
-          fetch(url, { signal: controller.signal })
-            .then(response => {
-              clearTimeout(timeoutId); // 取消超时计时器
-              if (response.ok) {
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !QR_CODE_REGEX.test(contentType)) {
-                  statusCell.textContent = '响应快';
-                  statusCell.classList.add('green');
-                  urlCell.textContent = '已通过检查';
-                  urlCell.classList.add('green');
-                  fastestUrls.push(url); // 记录响应快的URL，用于跳转
-                } else {
-                  statusCell.textContent = '含有二维码';
-                  statusCell.classList.add('red');
-                  urlCell.textContent = '已通过检查';
-                  urlCell.classList.add('red');
-                }
-              } else {
-                statusCell.textContent = '响应慢';
-                statusCell.classList.add('red');
-                urlCell.textContent = '已通过检查';
-                urlCell.classList.add('red');
-                slowestUrls.push(url); // 记录响应慢的URL，用于跳转
-              }
-            })
-            .catch(error => {
-              clearTimeout(timeoutId); // 取消超时计时器
-              statusCell.textContent = error.message; // 显示错误信息
-              statusCell.classList.add('red');
-              urlCell.textContent = '检查失败';
-              urlCell.classList.add('red');
-              slowestUrls.push(url); // 记录响应慢的URL，用于跳转
-            })
-            .finally(() => {
-              row.appendChild(statusCell);
-              tableBody.appendChild(row);
-            });
-        });
-
-        // 定时跳转到最快或第二快的URL
-        setInterval(() => {
-          const now = new Date();
-          const seconds = now.getSeconds();
-          const lastDigit = seconds % 10;
-
-          if (lastDigit % 2 === 1 && fastestUrls.length > 0) {
-            const randomIndex = Math.floor(Math.random() * fastestUrls.length);
-            openWindowWithoutPopup(fastestUrls[randomIndex]);
-          } else if ((lastDigit % 2 === 0 || lastDigit === 0) && slowestUrls.length > 0) {
-            let urlToOpen = slowestUrls[0];
-            if (slowestUrls.length > 1) {
-              urlToOpen = slowestUrls[1];
-            }
-            openWindowWithoutPopup(urlToOpen);
-          }
-        }, CHECK_INTERVAL_MS);
-      });
-
-    // 打开新窗口，排除弹出窗口和广告
-    function openWindowWithoutPopup(url) {
-      const popupWindow = window.open(url, '_blank');
-
-      // 检查是否有弹出窗口被阻止
-      if (popupWindow && !popupWindow.closed && typeof popupWindow.outerHeight !== 'undefined' && typeof popupWindow.outerWidth !== 'undefined' && popupWindow.outerHeight !== 0 && popupWindow.outerWidth !== 0) {
-        popupWindow.addEventListener('beforeunload', function (event) {
-          event.preventDefault();
-          event.stopPropagation();
-        });
-      } else {
-        const urlsToOpen = fastestUrls.concat(slowestUrls).filter(u => u !== url);
-        if (urlsToOpen.length > 0) {
-          const randomIndex = Math.floor(Math.random() * urlsToOpen.length);
-          window.location.href = urlsToOpen[randomIndex];
-        }
-      }
-    }
-  </script>
 </body>
 </html>
