@@ -8,16 +8,15 @@
       display: block;
       margin: 0;
       padding: 0;
-      font-size: 48px; /* 增大字体大小 */
       font-weight: bold;
       color: white;
       background-color: #444;
       border: none;
       border-radius: 0;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      height: 150px; /* 增高按钮高度 */
+      white-space: normal; /* 不换行 */
+      text-overflow: clip; /* 不截断 */
+      overflow: visible; /* 显示全部内容 */
+      height: auto; /* 自动调整高度 */
     }
   </style>
   <script>
@@ -28,6 +27,16 @@
       textarea.select();
       document.execCommand("copy");
       document.body.removeChild(textarea);
+    }
+
+    function adjustFontSize(buttons) {
+      buttons.forEach(function(button) {
+        var fontSize = 48; /* 初始字体大小 */
+        while (button.scrollWidth > button.clientWidth && fontSize > 16) { /* 当按钮文字超出按钮宽度且字体大小大于16时循环 */
+          fontSize--; /* 减小字体大小 */
+          button.style.fontSize = fontSize + 'px'; /* 设置新的字体大小 */
+        }
+      });
     }
 
     function readFile() {
@@ -51,6 +60,7 @@
               buttonContainer.appendChild(button);
               buttonContainer.appendChild(document.createElement("br")); // 添加换行
             });
+            adjustFontSize(buttonContainer.querySelectorAll('button'));
           } else {
             alert("未找到指定内容！");
           }
