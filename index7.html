@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>先点击复制提示词，再粘贴到ChatGPT</title>
+  <title>先点击复制提示词,再粘贴到ChatGPT</title>
   <style>
     body {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
       height: 100vh;
-      background-color: #f8f8f8;
+      background-color: #f2f2f2;
+      font-family: Arial, sans-serif;
     }
 
     .button-container {
@@ -16,22 +18,51 @@
       flex-direction: column;
       align-items: center;
       width: 90%;
-      max-width: 400px;
+      max-width: 600px;
     }
 
-    .prompt-button {
-      padding: 10px;
-      font-size: calc(16px + 0.8vw);
-      font-weight: bold;
-      color: white;
-      background-image: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
-      border: none;
+    .button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
       border-radius: 20px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+      font-weight: bold;
+      color: #ffffff;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .button:nth-child(1) {
+      background-color: #ff6666;
+    }
+
+    .button:nth-child(2) {
+      background-color: #ff9966;
+    }
+
+    .button:nth-child(3) {
+      background-color: #ffff66;
+    }
+
+    .button:nth-child(4) {
+      background-color: #66ff66;
+    }
+
+    .button:nth-child(5) {
+      background-color: #66ffff;
+    }
+
+    .button:nth-child(6) {
+      background-color: #6666ff;
     }
   </style>
+</head>
+<body onload="readFile()">
+  <div class="button-container" id="button-container"></div>
+
   <script>
     function copyToClipboard(text) {
       var textarea = document.createElement("textarea");
@@ -41,7 +72,7 @@
       document.execCommand("copy");
       document.body.removeChild(textarea);
     }
-
+    
     function readFile() {
       var file = "prompt.txt";
       var rawFile = new XMLHttpRequest();
@@ -53,32 +84,21 @@
           if (prompts && prompts.length > 0) {
             var buttonContainer = document.getElementById("button-container");
             buttonContainer.innerHTML = ""; // 清空容器
-            var maxLength = 0;
-
+    
             prompts.forEach(function(prompt) {
               var promptName = prompt.substring(1, prompt.length - 3);
-
+    
               // 创建按钮元素
               var button = document.createElement("button");
               button.textContent = promptName;
+              button.className = "button";
               button.onclick = function() {
                 copyPromptToClipboard(content, promptName);
               };
-
-              // 计算最长的文字长度
-              if (promptName.length > maxLength) {
-                maxLength = promptName.length;
-              }
-
+    
               // 添加按钮到容器中
               buttonContainer.appendChild(button);
             });
-
-            // 设置按钮宽度使其相同并自适应最长的文字
-            var buttons = buttonContainer.getElementsByTagName("button");
-            for (var i = 0; i < buttons.length; i++) {
-              buttons[i].style.width = maxLength + "em";
-            }
           } else {
             alert("未找到指定内容！");
           }
@@ -86,7 +106,7 @@
       };
       rawFile.send();
     }
-
+    
     function copyPromptToClipboard(content, promptName) {
       var startIndex = content.indexOf("[" + promptName + "开始]");
       var endIndex = content.indexOf("[" + promptName + "结束]");
@@ -100,8 +120,5 @@
       }
     }
   </script>
-</head>
-<body onload="readFile()">
-  <div class="button-container" id="button-container"></div>
 </body>
 </html>
