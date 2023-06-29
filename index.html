@@ -2,67 +2,89 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>URL Checker</title>
+  <title>永远免费用于学习,勿信一切广告</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    table {
-      border-collapse: collapse;
-      width: 100%;
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f1f1f1;
     }
-    th, td {
-      text-align: left;
-      padding: 8px;
+
+    h1, table {
+      display: none;
     }
-    th {
-      background-color: #4CAF50;
-      color: white;
+
+    .big-text {
+      font-size: 12vw;
+      text-align: center;
+      margin: 1vw;
     }
-    tr:nth-child(even) {
-      background-color: #f2f2f2;
-    }
+
     .green {
       color: green;
     }
+
     .red {
       color: red;
-    }
-    @media screen and (max-width: 600px) {
-      th, td {
-        font-size: 14px;
-        padding: 4px;
-      }
-      th:first-child, td:first-child {
-        font-size: 16px;
-        font-weight: bold;
-      }
     }
   </style>
 </head>
 <body>
+  <div class="big-text">永远免费</div>
+  <div class="big-text">合作方有广告</div>
+  <div class="big-text">不要点 别信它</div>
+  <div class="big-text">勿注册 勿登录</div>
+  <div class="big-text red">勿扫码 勿捐赏</div>
+  <div class="big-text">几千人在线..</div>
+  <div class="big-text">稍候十几秒..</div>
+
+  <h1>Ai大全</h1>
   <table>
     <thead>
       <tr>
-        <th>URL</th>
-        <th>Status</th>
+        <th>Ai网址</th>
+        <th>状态</th>
       </tr>
     </thead>
     <tbody id="table-body">
     </tbody>
   </table>
+
   <script>
+    const TIMEOUT_MS = 12000; // 请求超时时间（毫秒）
+    const CHECK_INTERVAL_MS = 1000; // 检查间隔时间（毫秒）
+
+    // 获取需要检查的URL列表
     fetch('url.txt')
       .then(response => response.text())
       .then(text => {
         const urls = text.split('\n');
         const tableBody = document.getElementById('table-body');
+        const fastestUrls = []; // 用于记录响应最快的URL列表
+        const slowestUrls = []; // 用于记录响应最慢的URL列表
+
+        // 遍历URL列表，逐个检查
         urls.forEach(url => {
           const row = document.createElement('tr');
           const urlCell = document.createElement('td');
           urlCell.textContent = url;
           row.appendChild(urlCell);
           const statusCell = document.createElement('td');
-          fetch(url, { timeout: 3000 }) // 设置3秒超时
+
+          // 发起HTTP请求，检查URL响应时间
+          const controller = new AbortController(); // 创建一个AbortController实例，用于设置超时时间
+          const timeoutId = setTimeout(() => {
+            controller.abort(); // 超时后中止请求
+          }, TIMEOUT_MS);
+          fetch(url, { signal: controller.signal })
             .then(response => {
+              clearTimeout(timeoutId); // 取消超时计时器
               if (response.ok) {
                 statusCell.textContent = '响应快';
                 statusCell.classList.add('green');
@@ -73,6 +95,7 @@
                 link.classList.add('green');
                 urlCell.innerHTML = '';
                 urlCell.appendChild(link);
+                fastestUrls.push(url); // 记录响应快的URL，用于跳转
               } else {
                 statusCell.textContent = '响应慢';
                 statusCell.classList.add('red');
@@ -83,10 +106,12 @@
                 link.classList.add('red');
                 urlCell.innerHTML = '';
                 urlCell.appendChild(link);
+                slowestUrls.push(url); // 记录响应慢的URL，用于跳转
               }
             })
             .catch(error => {
-              statusCell.textContent = '响应慢';
+              clearTimeout(timeoutId); // 取消超时计时器
+              statusCell.textContent = error.message; // 显示错误信息
               statusCell.classList.add('red');
               const link = document.createElement('a');
               link.href = url;
@@ -95,12 +120,28 @@
               link.classList.add('red');
               urlCell.innerHTML = '';
               urlCell.appendChild(link);
+              slowestUrls.push(url); // 记录响应慢的URL，用于跳转
             })
             .finally(() => {
               row.appendChild(statusCell);
               tableBody.appendChild(row);
             });
         });
+
+        // 定时跳转到最快或最慢的URL
+        setInterval(() => {
+          const now = new Date();
+          const seconds = now.getSeconds();
+          const lastDigit = seconds % 10;
+
+          if (lastDigit % 2 === 1 && fastestUrls.length > 0) {
+            const randomIndex = Math.floor(Math.random() * fastestUrls.length);
+            window.location.href = fastestUrls[randomIndex];
+          } else if (lastDigit % 2 === 0 && slowestUrls.length > 0) {
+            const randomIndex = Math.floor(Math.random() * slowestUrls.length);
+            window.location.href = slowestUrls[randomIndex];
+          }
+        }, CHECK_INTERVAL_MS);
       });
   </script>
 </body>
