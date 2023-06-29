@@ -30,9 +30,8 @@
       document.body.removeChild(textarea);
     }
 
-    function getRandomColor() {
-      var colors = ["#FF0000", "#0000FF", "#00FF00", "#FFA500", "#800080", "#00FFFF", "#8B008B", "#B8860B"];
-      var previousColor = document.documentElement.style.getPropertyValue('--button-color');
+    function getRandomColor(previousColor) {
+      var colors = ["#FF0000", "#0000FF", "#008000", "#FFA500", "#800080", "#006666", "#8B008B", "#B8860B"];
       var randomColor = previousColor;
       while (randomColor === previousColor) {
         randomColor = colors[Math.floor(Math.random() * colors.length)];
@@ -51,11 +50,14 @@
           if (prompts && prompts.length > 0) {
             var buttonContainer = document.getElementById("button-container");
             buttonContainer.innerHTML = "";
+            var previousColor = "";
             prompts.forEach(function(prompt, index) {
               var promptName = prompt.substring(1, prompt.length - 3);
               var button = document.createElement("button");
               button.textContent = "点我复制：" + promptName;
-              button.style.setProperty('--button-color', getRandomColor()); // 设置按钮颜色
+              var randomColor = getRandomColor(previousColor);
+              button.style.setProperty('--button-color', randomColor); // 设置按钮颜色
+              previousColor = randomColor;
               button.onclick = function() {
                 copyPromptToClipboard(content, promptName);
               };
