@@ -8,14 +8,13 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background-color: #f2f2f2;
+      background-color: #f0f0f0;
       font-family: Arial, sans-serif;
     }
 
     .button-container {
       display: flex;
       flex-direction: column;
-      align-items: center;
       width: 90%;
       max-width: 600px;
     }
@@ -24,43 +23,23 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 100%;
       height: 60px;
       margin-bottom: 10px;
       border-radius: 30px;
-      font-weight: bold;
       color: white;
-      font-size: 18px;
-      overflow: hidden;
+      font-weight: bold;
+      font-size: calc(12px + 1.5vw);
+      width: 100%;
     }
 
-    .button:nth-child(1) {
-      background-color: #ff0000;
-    }
+    .button:nth-child(1) { background-color: #FF0000; }
+    .button:nth-child(2) { background-color: #FF7F00; }
+    .button:nth-child(3) { background-color: #FFFF00; }
+    .button:nth-child(4) { background-color: #00FF00; }
+    .button:nth-child(5) { background-color: #0000FF; }
+    .button:nth-child(6) { background-color: #4B0082; }
+    .button:nth-child(7) { background-color: #8F00FF; }
 
-    .button:nth-child(2) {
-      background-color: #ff7f00;
-    }
-
-    .button:nth-child(3) {
-      background-color: #ffff00;
-    }
-
-    .button:nth-child(4) {
-      background-color: #00ff00;
-    }
-
-    .button:nth-child(5) {
-      background-color: #0000ff;
-    }
-
-    .button:nth-child(6) {
-      background-color: #4b0082;
-    }
-
-    .button:nth-child(7) {
-      background-color: #8f00ff;
-    }
   </style>
   <script>
     function copyToClipboard(text) {
@@ -89,8 +68,8 @@
 
               // 创建按钮元素
               var button = document.createElement("button");
-              button.textContent = promptName;
               button.className = "button";
+              button.textContent = promptName;
               button.onclick = function() {
                 copyPromptToClipboard(content, promptName);
               };
@@ -121,6 +100,6 @@
   </script>
 </head>
 <body onload="readFile()">
-  <div class="button-container" id="button-container"></div>
+  <div id="button-container" class="button-container"></div>
 </body>
 </html>
