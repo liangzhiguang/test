@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>先复制提示词，粘到ChatGPT发送</title>
+  <style>
+    button {
+  width: 100%;
+  display: block;
+  margin: 0;
+  padding: 0;
+  font-size: 6vw;
+  font-weight: bold;
+  color: white;
+  background-color: var(--button-color);
+  border: none;
+  border-radius: 30px; /* 调整此处的数值来改变圆角大小 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 20vh;
+}
+  </style>
+  <script>
+    function copyToClipboard(text) {
+      var textarea = document.createElement("textarea");
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+    }
+
+    function getRandomColor(previousColor) {
+      var colors = ["#FF0000", "#0000FF", "#008000", "#FFA500", "#800080", "#006666", "#8B008B", "#B8860B"];
+      var randomColor = previousColor;
+      while (randomColor === previousColor) {
+        randomColor = colors[Math.floor(Math.random() * colors.length)];
+      }
+      return randomColor;
+    }
+
+    function readFile() {
+      var file = "prompt_other9.txt";
+      var rawFile = new XMLHttpRequest();
+      rawFile.open("GET", file, true);
+      rawFile.onreadystatechange = function() {
+        if (rawFile.readyState === 4 && rawFile.status === 200) {
+          var content = rawFile.responseText;
+          var prompts = content.match(/\[(.*?)开始\]/g);
+          if (prompts && prompts.length > 0) {
+            var buttonContainer = document.getElementById("button-container");
+            buttonContainer.innerHTML = "";
+            var previousColor = "";
+            prompts.forEach(function(prompt, index) {
+              var promptName = prompt.substring(1, prompt.length - 3);
+              var button = document.createElement("button");
+              button.textContent = "点我复制：" + promptName;
+              var randomColor = getRandomColor(previousColor);
+              button.style.setProperty('--button-color', randomColor); // 设置按钮颜色
+              previousColor = randomColor;
+              button.onclick = function() {
+                copyPromptToClipboard(content, promptName);
+              };
+              buttonContainer.appendChild(button);
+              buttonContainer.appendChild(document.createElement("br"));
+            });
+          } else {
+            alert("未找到指定内容！");
+          }
+        }
+      };
+      rawFile.send();
+    }
+
+    function copyPromptToClipboard(content, promptName) {
+      var startIndex = content.indexOf("[" + promptName + "开始]");
+      var endIndex = content.indexOf("[" + promptName + "结束]");
+      if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
+        var trimmedContent = content.substring(startIndex + promptName.length + 2, endIndex).trim().split("\n").slice(1).join("\n");
+        copyToClipboard(trimmedContent);
+        alert("复制成功 " + promptName + " 打开ChatGPT 长摁输入框粘贴后 发送");
+        window.location.href = "index5.html";
+      } else {
+        alert("未找到指定内容！");
+      }
+    }
+  </script>
+</head>
+<body onload="readFile()">
+  <div id="button-container"></div>
+</body>
+</html>
