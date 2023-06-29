@@ -16,6 +16,7 @@
       flex-direction: column;
       align-items: center;
       gap: 10px;
+      width: 90vw; /* 按钮容器宽度为屏幕宽度的90% */
     }
 
     .prompt-button {
@@ -23,18 +24,17 @@
       font-size: calc(16px + 0.8vw);
       font-weight: bold;
       color: white;
-      background-color: #4a90e2;
+      background-color: hsl(var(--hue), 70%, 50%); /* 使用彩虹颜色 */
       border: none;
-      min-width: fit-content;
-      white-space: nowrap;
-      width: max-content;
+      width: 100%;
+      max-width: 400px; /* 最大宽度限制为400像素 */
       border-radius: 20px;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
 
-    .longest-button {
-      width: fit-content;
+    .prompt-button:hover {
+      background-color: hsl(var(--hue), 80%, 60%); /* 鼠标悬停时稍微增加亮度 */
     }
   </style>
   <script>
@@ -58,8 +58,9 @@
           if (prompts && prompts.length > 0) {
             var buttonContainer = document.getElementById("button-container");
             buttonContainer.innerHTML = ""; // 清空容器
+            var hueStep = 360 / prompts.length; // 每个按钮的颜色步进值
 
-            prompts.forEach(function(prompt) {
+            prompts.forEach(function(prompt, index) {
               var promptName = prompt.substring(1, prompt.length - 3);
 
               // 创建按钮元素
@@ -67,10 +68,8 @@
               button.textContent = "先复制 " + promptName;
               button.classList.add("prompt-button");
 
-              // 添加最长按钮样式
-              if (button.textContent.length >= 18) {
-                button.classList.add("longest-button");
-              }
+              // 设置按钮的颜色
+              button.style.setProperty("--hue", (hueStep * index) + "");
 
               button.onclick = function() {
                 copyPromptToClipboard(content, promptName);
