@@ -54,7 +54,7 @@
             prompts.forEach(function(prompt, index) {
               var promptName = prompt.substring(1, prompt.length - 3);
               var button = document.createElement("button");
-              button.textContent = "点我复制：" + promptName;
+              button.textContent = "：" + promptName;
               var randomColor = getRandomColor(previousColor);
               button.style.setProperty('--button-color', randomColor); // 设置按钮颜色
               previousColor = randomColor;
