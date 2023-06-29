@@ -31,6 +31,7 @@
                 copyPromptToClipboard(content, promptName);
               };
               buttonContainer.appendChild(button);
+              buttonContainer.appendChild(document.createElement("br")); // 添加换行
             });
           } else {
             alert("未找到指定内容！");
