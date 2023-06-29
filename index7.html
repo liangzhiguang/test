@@ -1,68 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>先点击复制提示词,再粘贴到ChatGPT</title>
+  <title>先点击复制提示词，再粘贴到ChatGPT</title>
   <style>
     body {
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
-      background-color: #f2f2f2;
-      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
     }
 
     .button-container {
       display: flex;
       flex-direction: column;
+      justify-content: space-between; /* 按钮两端自动对齐屏幕两侧 */
       align-items: center;
-      width: 90%;
-      max-width: 600px;
+      gap: 10px;
+      width: 100vw; /* 按钮容器宽度设置为100vw */
+      max-width: 400px; /* 添加最大宽度限制 */
     }
 
-    .button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
+    .prompt-button {
       padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 20px;
+      font-size: calc(16px + 0.8vw);
       font-weight: bold;
-      color: #ffffff;
-      text-align: center;
-      white-space: nowrap;
+      color: white;
+      background-color: hsl(var(--hue), 70%, 50%);
+      border: none;
+      width: 100%;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
-    .button:nth-child(1) {
-      background-color: #ff6666;
-    }
-
-    .button:nth-child(2) {
-      background-color: #ff9966;
-    }
-
-    .button:nth-child(3) {
-      background-color: #ffff66;
-    }
-
-    .button:nth-child(4) {
-      background-color: #66ff66;
-    }
-
-    .button:nth-child(5) {
-      background-color: #66ffff;
-    }
-
-    .button:nth-child(6) {
-      background-color: #6666ff;
+    .prompt-button:hover {
+      background-color: hsl(var(--hue), 80%, 60%);
     }
   </style>
-</head>
-<body onload="readFile()">
-  <div class="button-container" id="button-container"></div>
-
   <script>
     function copyToClipboard(text) {
       var textarea = document.createElement("textarea");
@@ -72,7 +47,7 @@
       document.execCommand("copy");
       document.body.removeChild(textarea);
     }
-    
+
     function readFile() {
       var file = "prompt.txt";
       var rawFile = new XMLHttpRequest();
@@ -83,20 +58,22 @@
           var prompts = content.match(/\[(.*?)开始\]/g);
           if (prompts && prompts.length > 0) {
             var buttonContainer = document.getElementById("button-container");
-            buttonContainer.innerHTML = ""; // 清空容器
-    
-            prompts.forEach(function(prompt) {
+            buttonContainer.innerHTML = "";
+            var hueStep = 360 / prompts.length;
+
+            prompts.forEach(function(prompt, index) {
               var promptName = prompt.substring(1, prompt.length - 3);
-    
-              // 创建按钮元素
+
               var button = document.createElement("button");
-              button.textContent = promptName;
-              button.className = "button";
+              button.textContent = "先复制 " + promptName;
+              button.classList.add("prompt-button");
+
+              button.style.setProperty("--hue", (hueStep * index) + "");
+
               button.onclick = function() {
                 copyPromptToClipboard(content, promptName);
               };
-    
-              // 添加按钮到容器中
+
               buttonContainer.appendChild(button);
             });
           } else {
@@ -106,7 +83,7 @@
       };
       rawFile.send();
     }
-    
+
     function copyPromptToClipboard(content, promptName) {
       var startIndex = content.indexOf("[" + promptName + "开始]");
       var endIndex = content.indexOf("[" + promptName + "结束]");
@@ -120,5 +97,8 @@
       }
     }
   </script>
+</head>
+<body onload="readFile()">
+  <div class="button-container" id="button-container"></div>
 </body>
 </html>
