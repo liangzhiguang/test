@@ -14,9 +14,10 @@
     .button-container {
       display: flex;
       flex-direction: column;
+      justify-content: space-between; /* 按钮两端自动抵近屏幕两侧 */
       align-items: center;
       gap: 10px;
-      width: 90vw; /* 按钮容器宽度为屏幕宽度的90% */
+      width: 100%; /* 按钮容器宽度设置为100% */
     }
 
     .prompt-button {
@@ -24,17 +25,17 @@
       font-size: calc(16px + 0.8vw);
       font-weight: bold;
       color: white;
-      background-color: hsl(var(--hue), 70%, 50%); /* 使用彩虹颜色 */
+      background-color: hsl(var(--hue), 70%, 50%);
       border: none;
       width: 100%;
-      max-width: 400px; /* 最大宽度限制为400像素 */
+      max-width: 400px;
       border-radius: 20px;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
 
     .prompt-button:hover {
-      background-color: hsl(var(--hue), 80%, 60%); /* 鼠标悬停时稍微增加亮度 */
+      background-color: hsl(var(--hue), 80%, 60%);
     }
   </style>
   <script>
@@ -57,25 +58,22 @@
           var prompts = content.match(/\[(.*?)开始\]/g);
           if (prompts && prompts.length > 0) {
             var buttonContainer = document.getElementById("button-container");
-            buttonContainer.innerHTML = ""; // 清空容器
-            var hueStep = 360 / prompts.length; // 每个按钮的颜色步进值
+            buttonContainer.innerHTML = "";
+            var hueStep = 360 / prompts.length;
 
             prompts.forEach(function(prompt, index) {
               var promptName = prompt.substring(1, prompt.length - 3);
 
-              // 创建按钮元素
               var button = document.createElement("button");
               button.textContent = "先复制 " + promptName;
               button.classList.add("prompt-button");
 
-              // 设置按钮的颜色
               button.style.setProperty("--hue", (hueStep * index) + "");
 
               button.onclick = function() {
                 copyPromptToClipboard(content, promptName);
               };
 
-              // 添加按钮到容器中
               buttonContainer.appendChild(button);
             });
           } else {
