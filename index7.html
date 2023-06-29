@@ -2,6 +2,24 @@
 <html>
 <head>
   <title>先点击复制提示词，再粘贴到ChatGPT</title>
+  <style>
+    button {
+      width: 100vw;
+      display: block;
+      margin: 0;
+      padding: 0;
+      font-size: 48px; /* 增大字体大小 */
+      font-weight: bold;
+      color: white;
+      background-color: #444;
+      border: none;
+      border-radius: 0;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      height: 150px; /* 增高按钮高度 */
+    }
+  </style>
   <script>
     function copyToClipboard(text) {
       var textarea = document.createElement("textarea");
@@ -54,23 +72,6 @@
       }
     }
   </script>
-  <style>
-    button {
-      width: 100vw;
-      display: block;
-      margin: 0;
-      padding: 0;
-      font-size: 16px;
-      font-weight: bold;
-      color: white;
-      background-color: #444;
-      border: none;
-      border-radius: 0;
-      white-space: nowrap; /* 不换行 */
-      text-overflow: ellipsis; /* 超出部分显示省略号 */
-      overflow: hidden; /* 隐藏溢出部分 */
-    }
-  </style>
 </head>
 <body onload="readFile()">
   <div id="button-container"></div>
