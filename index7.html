@@ -1,65 +1,152 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title></title>
-  <script>
-    function copyToClipboard(text) {
-      var textarea = document.createElement("textarea");
-      textarea.value = text;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textarea);
-    }
+	<title>先点击复制提示词，再粘贴到ChatGPT</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
 
-    function readFile() {
-      var file = "prompt.txt";
-      var rawFile = new XMLHttpRequest();
-      rawFile.open("GET", file, true);
-      rawFile.onreadystatechange = function() {
-        if (rawFile.readyState === 4 && rawFile.status === 200) {
-          var content = rawFile.responseText;
-          var prompts = content.match(/\[(.*?)开始\]/g);
-          if (prompts && prompts.length > 0) {
-            var buttonContainer = document.getElementById("button-container");
-            buttonContainer.innerHTML = ""; // 清空容器
+		body {
+			font-family: Arial, sans-serif;
+			text-align: center;
+			margin: 0;
+			padding: 20px;
+			background-color: #f1f1f1;
+		}
 
-            prompts.forEach(function(prompt) {
-              var promptName = prompt.substring(1, prompt.length - 3);
+		h1 {
+			font-size: 24px;
+			margin-bottom: 20px;
+		}
 
-              // 创建按钮元素
-              var button = document.createElement("button");
-              button.textContent = "先复制 " + promptName;
-              button.onclick = function() {
-                copyPromptToClipboard(content, promptName);
-              };
+		.button-container {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+		}
 
-              // 添加按钮到容器中
-              buttonContainer.appendChild(button);
-            });
-          } else {
-            alert("未找到指定内容！");
-          }
-        }
-      };
-      rawFile.send();
-    }
+		.button {
+			width: calc(33.33% - 20px);
+			margin: 10px;
+			padding: 10px;
+			font-size: 18px;
+			border-radius: 20px;
+			cursor: pointer;
+			color: #ffffff;
+			border: none;
+		}
 
-    function copyPromptToClipboard(content, promptName) {
-      var startIndex = content.indexOf("[" + promptName + "开始]");
-      var endIndex = content.indexOf("[" + promptName + "结束]");
-      if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
-        var trimmedContent = content.substring(startIndex + promptName.length + 2, endIndex).trim().split("\n").slice(1).join("\n");
-        copyToClipboard(trimmedContent);
-        alert("已复制 " + promptName + " 到剪贴板！");
-        window.location.href = "index5.html";
-      } else {
-        alert("未找到指定内容！");
-      }
-    }
-  </script>
+		.button:nth-child(1) {
+			background-color: #FF4C4C;
+		}
+
+		.button:nth-child(2) {
+			background-color: #FFA500;
+		}
+
+		.button:nth-child(3) {
+			background-color: #FFFF00;
+		}
+
+		.button:nth-child(4) {
+			background-color: #008000;
+		}
+
+		.button:nth-child(5) {
+			background-color: #0000FF;
+		}
+
+		.button:nth-child(6) {
+			background-color: #4B0082;
+		}
+
+		.button:nth-child(7) {
+			background-color: #8B00FF;
+		}
+
+		.button:nth-child(8) {
+			background-color: #FF1493;
+		}
+
+		.button:nth-child(9) {
+			background-color: #DC143C;
+		}
+
+		.button:nth-child(10) {
+			background-color: #1E90FF;
+		}
+
+		.button:nth-child(11) {
+			background-color: #32CD32;
+		}
+
+		.button:nth-child(12) {
+			background-color: #FFFF00;
+		}
+
+		@media screen and (max-width: 768px) {
+			.button {
+				width: calc(50% - 20px);
+			}
+		}
+
+		@media screen and (max-width: 480px) {
+			.button {
+				width: calc(100% - 20px);
+			}
+		}
+	</style>
 </head>
 <body onload="readFile()">
-  <div id="button-container"></div>
-</body>
-</html>
+	<h1>先点击复制提示词，再粘贴到ChatGPT</h1>
+	<div class="button-container" id="button-container"></div>
+
+	<script>
+		function copyToClipboard(text) {
+			var textarea = document.createElement("textarea");
+			textarea.value = text;
+			document.body.appendChild(textarea);
+			textarea.select();
+			document.execCommand("copy");
+			document.body.removeChild(textarea);
+		}
+
+		function readFile() {
+			var file = "prompt.txt";
+			var rawFile = new XMLHttpRequest();
+			rawFile.open("GET", file, true);
+			rawFile.onreadystatechange = function() {
+				if (rawFile.readyState === 4 && rawFile.status === 200) {
+					var content = rawFile.responseText;
+					var prompts = content.match(/\[(.*?)开始]/g);
+					if (prompts && prompts.length > 0) {
+						var buttonContainer = document.getElementById("button-container");
+						buttonContainer.innerHTML = ""; // 清空容器
+
+						prompts.forEach(function(prompt, index) {
+							var promptName = prompt.substring(1, prompt.length - 3);
+
+							// 创建按钮元素
+							var button = document.createElement("button");
+							button.textContent = "先复制 " + promptName;
+							button.className = "button";
+							button.onclick = function() {
+								copyPromptToClipboard(content, promptName);
+							};
+
+							// 添加按钮到容器中
+							buttonContainer.appendChild(button);
+						});
+					} else {
+						alert("未找到指定内容！");
+					}
+				}
+			};
+			rawFile.send();
+		}
+
+		function copyPromptToClipboard(content, promptName) {
+			var startIndex = content.indexOf("[" + promptName + "开始]");
+			var endIndex = content.indexOf("[" + promptName + "结束]");
+			if (startIndex !== -1 && endIndex !== -1 &&
