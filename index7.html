@@ -14,11 +14,11 @@
     .button-container {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: space-between; /* 按钮两端自动对齐屏幕两侧 */
       align-items: center;
       gap: 10px;
-      width: 100%;
-      padding: 0 10px; /* 添加左右边距 */
+      width: 100vw; /* 按钮容器宽度设置为100vw */
+      max-width: 400px; /* 添加最大宽度限制 */
     }
 
     .prompt-button {
@@ -29,18 +29,13 @@
       background-color: hsl(var(--hue), 70%, 50%);
       border: none;
       width: 100%;
-      max-width: 100%; /* 修改为100% */
       border-radius: 20px;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
 
-    /* 新增的样式 */
-    @media (min-width: 400px) {
-      .button-container {
-        max-width: 400px;
-        margin: 0 auto; /* 居中对齐 */
-      }
+    .prompt-button:hover {
+      background-color: hsl(var(--hue), 80%, 60%);
     }
   </style>
   <script>
