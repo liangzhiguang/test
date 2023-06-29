@@ -2,42 +2,6 @@
 <html>
 <head>
   <title>先点击复制提示词，再粘贴到ChatGPT</title>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f8f8f8;
-    }
-
-    .button-container {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between; /* 按钮两端自动对齐屏幕两侧 */
-      align-items: center;
-      gap: 10px;
-      width: 100vw; /* 按钮容器宽度设置为100vw */
-      max-width: 400px; /* 添加最大宽度限制 */
-    }
-
-    .prompt-button {
-      padding: 10px;
-      font-size: calc(16px + 0.8vw);
-      font-weight: bold;
-      color: white;
-      background-color: hsl(var(--hue), 70%, 50%);
-      border: none;
-      width: 100%;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .prompt-button:hover {
-      background-color: hsl(var(--hue), 80%, 60%);
-    }
-  </style>
   <script>
     function copyToClipboard(text) {
       var textarea = document.createElement("textarea");
@@ -59,21 +23,13 @@
           if (prompts && prompts.length > 0) {
             var buttonContainer = document.getElementById("button-container");
             buttonContainer.innerHTML = "";
-            var hueStep = 360 / prompts.length;
-
             prompts.forEach(function(prompt, index) {
               var promptName = prompt.substring(1, prompt.length - 3);
-
               var button = document.createElement("button");
               button.textContent = "先复制 " + promptName;
-              button.classList.add("prompt-button");
-
-              button.style.setProperty("--hue", (hueStep * index) + "");
-
               button.onclick = function() {
                 copyPromptToClipboard(content, promptName);
               };
-
               buttonContainer.appendChild(button);
             });
           } else {
@@ -99,6 +55,6 @@
   </script>
 </head>
 <body onload="readFile()">
-  <div class="button-container" id="button-container"></div>
+  <div id="button-container"></div>
 </body>
 </html>
