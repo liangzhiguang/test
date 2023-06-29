@@ -4,21 +4,21 @@
   <title>先点击复制提示词，再粘贴到ChatGPT</title>
   <style>
     button {
-      width: 100%;
-      display: block;
-      margin: 0;
-      padding: 0;
-      font-size: 6vw;
-      font-weight: bold;
-      color: white;
-      background-color: var(--button-color); /* 使用变量设置按钮颜色 */
-      border: none;
-      border-radius: 5px; /* 修改为小圆角 */
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      height: 20vh;
-    }
+  width: 100%;
+  display: block;
+  margin: 0;
+  padding: 0;
+  font-size: 6vw;
+  font-weight: bold;
+  color: white;
+  background-color: var(--button-color);
+  border: none;
+  border-radius: 10px; /* 调整此处的数值来改变圆角大小 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 20vh;
+}
   </style>
   <script>
     function copyToClipboard(text) {
