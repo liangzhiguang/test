@@ -3,45 +3,63 @@
 <head>
   <title>先点击复制提示词,再粘贴到ChatGPT</title>
   <style>
-    /* 容器样式 */
     body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f2f2f2;
+      font-family: Arial, sans-serif;
+    }
+
+    .button-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
-      background: #f2f2f2;
+      width: 90%;
+      max-width: 600px;
     }
 
-    /* 按钮样式 */
     .button {
-      width: 90%;
-      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 60px;
       margin-bottom: 10px;
-      text-align: center;
-      font-size: 24px;
+      border-radius: 30px;
       font-weight: bold;
       color: white;
-      border-radius: 25px;
-      cursor: pointer;
+      font-size: 18px;
+      overflow: hidden;
     }
 
-    /* 彩虹效果 */
-    .button:nth-child(1) { background-color: #FF5F6D; }
-    .button:nth-child(2) { background-color: #FFC371; }
-    .button:nth-child(3) { background-color: #FFFC7F; }
-    .button:nth-child(4) { background-color: #9EE09E; }
-    .button:nth-child(5) { background-color: #77DDFF; }
-    .button:nth-child(6) { background-color: #A299FF; }
-    .button:nth-child(7) { background-color: #FF85CD; }
-    .button:nth-child(8) { background-color: #FFB3A7; }
-    .button:nth-child(9) { background-color: #FFD700; }
+    .button:nth-child(1) {
+      background-color: #ff0000;
+    }
 
-    /* 响应式设计 */
-    @media only screen and (min-width: 600px) {
-      .button {
-        width: 60%;
-      }
+    .button:nth-child(2) {
+      background-color: #ff7f00;
+    }
+
+    .button:nth-child(3) {
+      background-color: #ffff00;
+    }
+
+    .button:nth-child(4) {
+      background-color: #00ff00;
+    }
+
+    .button:nth-child(5) {
+      background-color: #0000ff;
+    }
+
+    .button:nth-child(6) {
+      background-color: #4b0082;
+    }
+
+    .button:nth-child(7) {
+      background-color: #8f00ff;
     }
   </style>
   <script>
@@ -66,7 +84,7 @@
             var buttonContainer = document.getElementById("button-container");
             buttonContainer.innerHTML = ""; // 清空容器
 
-            prompts.forEach(function(prompt, index) {
+            prompts.forEach(function(prompt) {
               var promptName = prompt.substring(1, prompt.length - 3);
 
               // 创建按钮元素
@@ -103,6 +121,6 @@
   </script>
 </head>
 <body onload="readFile()">
-  <div id="button-container"></div>
+  <div class="button-container" id="button-container"></div>
 </body>
 </html>
