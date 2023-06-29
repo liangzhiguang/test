@@ -20,14 +20,21 @@
 
     .prompt-button {
       padding: 10px;
-      font-size: 20px;
+      font-size: calc(16px + 0.8vw);
+      font-weight: bold;
       color: white;
       background-color: #4a90e2;
       border: none;
-      width: 250px;
+      min-width: fit-content;
+      white-space: nowrap;
+      width: max-content;
       border-radius: 20px;
       cursor: pointer;
       transition: background-color 0.3s ease;
+    }
+
+    .longest-button {
+      width: fit-content;
     }
   </style>
   <script>
@@ -59,6 +66,12 @@
               var button = document.createElement("button");
               button.textContent = "先复制 " + promptName;
               button.classList.add("prompt-button");
+
+              // 添加最长按钮样式
+              if (button.textContent.length >= 18) {
+                button.classList.add("longest-button");
+              }
+
               button.onclick = function() {
                 copyPromptToClipboard(content, promptName);
               };
