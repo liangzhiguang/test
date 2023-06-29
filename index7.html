@@ -8,16 +8,16 @@
       display: block;
       margin: 0;
       padding: 0;
-      font-size: 6vw; /* 使用vw单位适应屏幕宽度 */
+      font-size: 6vw;
       font-weight: bold;
       color: white;
-      background-color: #FF0000; /* 鲜红色 */
+      background-color: var(--button-color); /* 使用变量设置按钮颜色 */
       border: none;
       border-radius: 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      height: 20vh; /* 设置按钮高度 */
+      height: 20vh;
     }
   </style>
   <script>
@@ -28,6 +28,16 @@
       textarea.select();
       document.execCommand("copy");
       document.body.removeChild(textarea);
+    }
+
+    function getRandomColor() {
+      var colors = ["#FF0000", "#0000FF", "#00FF00", "#FFA500", "#800080", "#00FFFF", "#8B008B", "#B8860B"];
+      var previousColor = document.documentElement.style.getPropertyValue('--button-color');
+      var randomColor = previousColor;
+      while (randomColor === previousColor) {
+        randomColor = colors[Math.floor(Math.random() * colors.length)];
+      }
+      return randomColor;
     }
 
     function readFile() {
@@ -44,12 +54,13 @@
             prompts.forEach(function(prompt, index) {
               var promptName = prompt.substring(1, prompt.length - 3);
               var button = document.createElement("button");
-              button.textContent = "先复制 " + promptName;
+              button.textContent = "点我复制：" + promptName;
+              button.style.setProperty('--button-color', getRandomColor()); // 设置按钮颜色
               button.onclick = function() {
                 copyPromptToClipboard(content, promptName);
               };
               buttonContainer.appendChild(button);
-              buttonContainer.appendChild(document.createElement("br")); // 添加换行
+              buttonContainer.appendChild(document.createElement("br"));
             });
           } else {
             alert("未找到指定内容！");
@@ -65,7 +76,7 @@
       if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
         var trimmedContent = content.substring(startIndex + promptName.length + 2, endIndex).trim().split("\n").slice(1).join("\n");
         copyToClipboard(trimmedContent);
-        alert("已复制 " + promptName + " 到剪贴板！");
+        alert("复制成功 " + promptName + " 打开ChatGPT 长摁输入框粘贴后 发送");
         window.location.href = "index5.html";
       } else {
         alert("未找到指定内容！");
