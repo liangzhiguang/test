@@ -4,20 +4,20 @@
   <title>先点击复制提示词，再粘贴到ChatGPT</title>
   <style>
     button {
-      width: 100vw;
+      width: 100%;
       display: block;
       margin: 0;
       padding: 0;
-      font-size: calc(70vh / 3); /* 增大字体大小 */
+      font-size: 6vw; /* 使用vw单位适应屏幕宽度 */
       font-weight: bold;
       color: white;
       background-color: #FF0000; /* 鲜红色 */
       border: none;
       border-radius: 0;
       white-space: nowrap;
-      text-overflow: ellipsis;
       overflow: hidden;
-      height: 70vh; /* 增高按钮高度 */
+      text-overflow: ellipsis;
+      height: 20vh; /* 设置按钮高度 */
     }
   </style>
   <script>
