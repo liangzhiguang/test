@@ -44,24 +44,25 @@
   <div class="big-text">几千人在线..</div>
   <div class="big-text">稍候十几秒..</div>
 
-  <h1>Ai大全</h1>
-  <table>
-    <thead>
-      <tr>
-        <th>Ai网址</th>
-        <th>状态</th>
-      </tr>
-    </thead>
-    <tbody id="table-body">
-    </tbody>
-  </table>
-
   <script>
     const TIMEOUT_MS = 12000; // 请求超时时间（毫秒）
     const CHECK_INTERVAL_MS = 1000; // 检查间隔时间（毫秒）
 
     // 获取需要检查的URL列表
-    fetch('url.txt')
+    const urlFiles = [
+      'url1.txt',
+      'url1.txt',
+      'url2.txt',
+      'url2.txt',
+      'url3.txt',
+      'url3.txt',
+      'url4.txt',
+      'url4.txt',
+      'url5.txt',
+      'url5.txt'
+    ];
+
+    fetch(urlFiles[new Date().getSeconds() % 10])
       .then(response => response.text())
       .then(text => {
         const urls = text.split('\n');
