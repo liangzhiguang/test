@@ -11,6 +11,7 @@
         #inputBox {
             width: 100%;
             margin-bottom: 10px;
+            border: 1px solid #ccc;
         }
         
         #copyButton {
@@ -26,14 +27,14 @@
     <button id="copyButton">复制去打开Chatgpt粘贴</button>
 
     <script>
-        // 复制按钮点击事件        document.getElementById("copyButton").addEventListener("click", function() {
+        document.getElementById("copyButton").addEventListener("click", function() {
             var inputText = document.getElementById("inputBox").value;
             if (inputText === "") {
                 alert("请输入内容！");
             } else {
                 var finalText = "亲爱的Ai: " + inputText;
                 // 在这里执行复制操作                // ...
-                // 跳转到同目录下的index.html页面                window.location.href = "index.html";
+                window.location.href = "index.html";
             }
         });
     </script>
