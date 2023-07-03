@@ -1,94 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>学习先复制提示词，粘到ChatGPT</title>
-  <style>
-    button {
-      width: 100%;
-      display: block;
-      margin: 0;
-      padding: 0;
-      font-size: 6vw;
-      font-weight: bold;
-      color: white;
-      background-color: var(--button-color);
-      border: none;
-      border-radius: 30px; /* 调整此处的数值来改变圆角大小 */
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      height: 20vh;
-    }
-  </style>
-  <script>
-    function copyToClipboard(text) {
-      navigator.clipboard.writeText(text)
-        .then(() => {
-          alert("复制成功！");
-          if (confirm("复制成功，是否跳转到ChatGPT页面？")) {
-            window.location.href = "index.html";
-          }
-        })
-        .catch((error) => {
-          console.error("复制失败：", error);
-        });
-    }
-
-    function getRandomColor(previousColor) {
-      var colors = ["#FF0000", "#0000FF", "#008000", "#FFA500", "#800080", "#006666", "#8B008B", "#B8860B"];
-      var randomColor = previousColor;
-      while (randomColor === previousColor) {
-        randomColor = colors[Math.floor(Math.random() * colors.length)];
-      }
-      return randomColor;
-    }
-
-    function readFile() {
-      var file = "prompt_stydy8.txt";
-      fetch(file)
-        .then(response => response.text())
-        .then(content => {
-          var prompts = content.match(/\[(.*?)开始\]/g);
-          if (prompts && prompts.length > 0) {
-            var buttonContainer = document.getElementById("button-container");
-            buttonContainer.innerHTML = "";
-            var previousColor = "";
-            prompts.forEach(function(prompt, index) {
-              var promptName = prompt.substring(1, prompt.length - 3);
-              var button = document.createElement("button");
-              button.textContent = "：" + promptName;
-              var randomColor = getRandomColor(previousColor);
-              button.style.setProperty('--button-color', randomColor); // 设置按钮颜色
-              previousColor = randomColor;
-              button.onclick = function() {
-                copyPromptToClipboard(content, promptName);
-              };
-              buttonContainer.appendChild(button);
-              buttonContainer.appendChild(document.createElement("br"));
-            });
-          } else {
-            alert("未找到指定内容！");
-          }
-        })
-        .catch(error => {
-          alert("读取文件时发生错误！");
-          console.error(error);
-        });
-    }
-
-    function copyPromptToClipboard(content, promptName) {
-      var startIndex = content.indexOf("[" + promptName + "开始]");
-      var endIndex = content.indexOf("[" + promptName + "结束]");
-      if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
-        var trimmedContent = content.substring(startIndex + promptName.length + 2, endIndex).trim().split("\n").slice(1).join("\n");
-        copyToClipboard(trimmedContent);
-      } else {
-        alert("未找到指定内容！");
-      }
-    }
-  </script>
+    <meta charset="UTF-8">
+    <title>ChatGPT 输入页</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+        }
+        
+        .input-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .input-box {
+            width: 80%;
+            max-width: 400px;
+            height: 100px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            font-size: 16px;
+        }
+        
+        .copy-button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 14px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+    </style>
 </head>
-<body onload="readFile()">
-  <div id="button-container"></div>
+<body>
+    <h1>ChatGPT 输入页</h1>
+    <div class="input-container">
+        <textarea id="input-box" class="input-box" placeholder="请输入您的问题或让chgpt完成的任务"></textarea>
+    </div>
+    <button id="copy-button" class="copy-button">复制去打开Chatgpt粘贴</button>
+    
+    <script>
+        document.getElementById("copy-button").addEventListener("click", function(){
+            var input = document.getElementById("input-box").value;
+            if (input.trim() === "") {
+                alert("您还没有输入，请输入您的问题或让chgpt完成的任务");
+            } else {
+                var textToCopy = "亲爱的Ai: " + input;
+                navigator.clipboard.writeText(textToCopy).then(function() {
+                    window.location.href = "index.html";
+                });
+            }
+        });
+    </script>
 </body>
 </html>
