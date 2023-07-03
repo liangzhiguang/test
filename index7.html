@@ -4,21 +4,32 @@
   <title>智能赚钱先复制提示词,贴到ChatGPT</title>
   <style>
     button {
-  width: 100%;
-  display: block;
-  margin: 0;
-  padding: 0;
-  font-size: 6vw;
-  font-weight: bold;
-  color: white;
-  background-color: var(--button-color);
-  border: none;
-  border-radius: 30px; /* 调整此处的数值来改变圆角大小 */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  height: 20vh;
-}
+      width: 100%;
+      display: block;
+      margin: 0;
+      padding: 0;
+      font-size: 6vw;
+      font-weight: bold;
+      color: white;
+      background-color: var(--button-color);
+      border: none;
+      border-radius: 30px; /* 调整此处的数值来改变圆角大小 */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      height: 20vh;
+    }
+    textarea {
+      width: 100%;
+      height: 20vh;
+      font-size: 6vw;
+      font-weight: bold;
+      padding: 5px;
+      margin-bottom: 10px;
+      border-radius: 30px;
+      border: none;
+      resize: none;
+    }
   </style>
   <script>
     function copyToClipboard(text) {
@@ -84,9 +95,21 @@
         alert("未找到指定内容！");
       }
     }
+
+    function copyCustomPromptToClipboard() {
+      var customPrompt = document.getElementById("custom-prompt").value.trim();
+      if (customPrompt !== "") {
+        customPrompt = "亲爱的Ai:" + customPrompt;
+        copyToClipboard(customPrompt);
+        alert("复制成功 " + customPrompt + " 打开ChatGPT长摁输入框粘贴后 发送");
+        window.location.href = "index.html";
+      }
+    }
   </script>
 </head>
 <body onload="readFile()">
   <div id="button-container"></div>
+  <textarea id="custom-prompt" placeholder="请输入自定义提示词"></textarea>
+  <button onclick="copyCustomPromptToClipboard()">复制自定义提示词</button>
 </body>
 </html>
