@@ -4,30 +4,31 @@
   <title>学习先复制提示词，粘到ChatGPT</title>
   <style>
     button {
-  width: 100%;
-  display: block;
-  margin: 0;
-  padding: 0;
-  font-size: 6vw;
-  font-weight: bold;
-  color: white;
-  background-color: var(--button-color);
-  border: none;
-  border-radius: 30px; /* 调整此处的数值来改变圆角大小 */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  height: 20vh;
-}
+      width: 100%;
+      display: block;
+      margin: 0;
+      padding: 0;
+      font-size: 6vw;
+      font-weight: bold;
+      color: white;
+      background-color: var(--button-color);
+      border: none;
+      border-radius: 30px; /* 调整此处的数值来改变圆角大小 */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      height: 20vh;
+    }
   </style>
   <script>
     function copyToClipboard(text) {
-      var textarea = document.createElement("textarea");
-      textarea.value = text;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textarea);
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          alert("复制成功！");
+        })
+        .catch((error) => {
+          console.error("复制失败：", error);
+        });
     }
 
     function getRandomColor(previousColor) {
@@ -78,8 +79,9 @@
       if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
         var trimmedContent = content.substring(startIndex + promptName.length + 2, endIndex).trim().split("\n").slice(1).join("\n");
         copyToClipboard(trimmedContent);
-        alert("复制成功 " + promptName + " 打开ChatGPT 长摁输入框粘贴后 发送");
-        window.location.href = "index.html";
+        if (confirm("复制成功 " + promptName + "，是否跳转到ChatGPT页面？")) {
+          window.location.href = "index.html";
+        }
       } else {
         alert("未找到指定内容！");
       }
