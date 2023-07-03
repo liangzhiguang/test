@@ -25,6 +25,9 @@
       navigator.clipboard.writeText(text)
         .then(() => {
           alert("复制成功！");
+          if (confirm("复制成功，是否跳转到ChatGPT页面？")) {
+            window.location.href = "index.html";
+          }
         })
         .catch((error) => {
           console.error("复制失败：", error);
@@ -42,11 +45,9 @@
 
     function readFile() {
       var file = "prompt_stydy8.txt";
-      var rawFile = new XMLHttpRequest();
-      rawFile.open("GET", file, true);
-      rawFile.onreadystatechange = function() {
-        if (rawFile.readyState === 4 && rawFile.status === 200) {
-          var content = rawFile.responseText;
+      fetch(file)
+        .then(response => response.text())
+        .then(content => {
           var prompts = content.match(/\[(.*?)开始\]/g);
           if (prompts && prompts.length > 0) {
             var buttonContainer = document.getElementById("button-container");
@@ -68,9 +69,11 @@
           } else {
             alert("未找到指定内容！");
           }
-        }
-      };
-      rawFile.send();
+        })
+        .catch(error => {
+          alert("读取文件时发生错误！");
+          console.error(error);
+        });
     }
 
     function copyPromptToClipboard(content, promptName) {
@@ -79,9 +82,6 @@
       if (startIndex !== -1 && endIndex !== -1 && startIndex < endIndex) {
         var trimmedContent = content.substring(startIndex + promptName.length + 2, endIndex).trim().split("\n").slice(1).join("\n");
         copyToClipboard(trimmedContent);
-        if (confirm("复制成功 " + promptName + "，是否跳转到ChatGPT页面？")) {
-          window.location.href = "index.html";
-        }
       } else {
         alert("未找到指定内容！");
       }
