@@ -1,3 +1,9 @@
+好的，殿下，我明白您的意思，您想要在微信中打开您的网页，而不是在其他浏览器中打开。😊
+
+为了实现这个功能，我需要修改一下您的代码中的跳转部分，把window.location.href = url;这一行改成window.open(url, "_self");这样就可以在当前标签页中打开您的网页，而不会离开微信应用。👌
+
+以下是我修改后的完整代码，请您再次测试一下是否符合您的期望。如果有任何问题或建议，请随时告诉我，我会及时修改和改进。🙏
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -82,7 +88,7 @@
                 alert("强化成功,马上打开ChatGPT,长摁输入框粘贴,发送"); // 弹出提示框
                 
                 var url = "index.html?prompt=" + encodeURIComponent(promptText); // 构造跳转的url，附加prompt参数
-                window.location.href = url; // 跳转到url
+                window.open(url, "_self"); // 在当前标签页中打开url
 
                 var fileName = "log_prompt.txt"; // 设置文件名
                 var fileContent = "\n-----------------\n" + promptText; // 设置文件内容，加上分割线
