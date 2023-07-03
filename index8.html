@@ -57,7 +57,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>强化您的提示词</h1>
+        <h1>增强您的提示词</h1>
         <label for="input">：</label>
         <textarea id="input" placeholder="请输入您的问题或让 ChatGPT 完成的任务"></textarea>
         <button id="copyButton">复制去打开 ChatGPT 粘贴</button>
@@ -79,7 +79,7 @@
                 document.execCommand("copy"); // 复制临时元素的内容
                 document.body.removeChild(temp); // 删除临时元素
                 
-                alert("强化复制成功,去ChatGPT粘贴并发送"); // 弹出提示框
+                alert("强化成功,去ChatGPT粘贴发送"); // 弹出提示框
                 
                 var url = "index.html?prompt=" + encodeURIComponent(promptText); // 构造跳转的url，附加prompt参数
                 window.location.href = url; // 跳转到url
