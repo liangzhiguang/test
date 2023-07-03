@@ -1,146 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>智能赚钱先复制提示词，贴到ChatGPT</title>
-  <style>
-    /* 样式表中添加输入框和按钮的样式 */
-    #custom-prompt {
-      width: 100%;
-      display: block;
-      margin-bottom: 10px;
-      font-size: 6vw;
-      font-weight: bold;
-      color: black;
-      background-color: white;
-      border: none;
-      border-radius: 30px;
-      padding: 10px;
-      box-sizing: border-box;
-      height: 20vh;
-    }
-
-    #copy-button {
-      width: 100%;
-      display: block;
-      margin-bottom: 10px;
-      font-size: 6vw;
-      font-weight: bold;
-      color: white;
-      background-color: red;
-      border: none;
-      border-radius: 30px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      height: 20vh;
-    }
-
-    button {
-      width: 100%;
-      display: block;
-      margin: 0;
-      padding: 0;
-      font-size: 6vw;
-      font-weight: bold;
-      color: white;
-      background-color: var(--button-color);
-      border: none;
-      border-radius: 30px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      height: 20vh;
-    }
-  </style>
-  <script>
-    function copyToClipboard(text) {
-      var textarea = document.createElement("textarea");
-      textarea.value = text;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textarea);
-    }
-
-    function getRandomColor(previousColor) {
-      var colors = ["#FF0000", "#0000FF", "#008000", "#FFA500", "#800080", "#006666", "#8B008B", "#B8860B"];
-      var randomColor = previousColor;
-      while (randomColor === previousColor) {
-        randomColor = colors[Math.floor(Math.random() * colors.length)];
-      }
-      return randomColor;
-    }
-
-    function readFile() {
-      var file = "prompt_money7.txt";
-      var rawFile = new XMLHttpRequest();
-      rawFile.open("GET", file, true);
-      rawFile.onreadystatechange = function() {
-        if (rawFile.readyState === 4 && rawFile.status === 200) {
-          var content = rawFile.responseText;
-          var prompts = content.match(/\[(.*?)开始\]/g);
-          if (prompts && prompts.length > 0) {
-            var buttonContainer = document.getElementById("button-container");
-            buttonContainer.innerHTML = "";
-
-            // 添加用户自定义提示词输入框
-            var customPrompt = document.createElement("textarea");
-            customPrompt.id = "custom-prompt";
-            customPrompt.placeholder = "请输入自定义提示词";
-            buttonContainer.appendChild(customPrompt);
-
-            // 添加复制按钮和用户输入框内容复制按钮
-            var copyButton = document.createElement("button");
-            copyButton.id = "copy-button";
-            copyButton.textContent = "复制";
-            copyButton.onclick = function() {
-              var promptText = document.getElementById("prompt-text").textContent;
-              copyToClipboard(promptText);
-              alert("复制成功 " + promptText + "，打开ChatGPT 长按输入框粘贴后发送");
-            };
-            buttonContainer.appendChild(copyButton);
-            buttonContainer.appendChild(document.createElement("br"));
-
-            var customCopyButton = document.createElement("button");
-            customCopyButton.id = "custom-copy-button";
-            customCopyButton.textContent = "复制用户输入框内容";
-            customCopyButton.onclick = function() {
-              var customPromptValue = customPrompt.value.trim();
-              if (customPromptValue) {
-                // 如果用户输入了自定义提示词，则添加 "亲爱的Ai:" 开头
-                customPromptValue = "亲爱的Ai: " + customPromptValue;
-                copyToClipboard(customPromptValue);
-                alert("复制成功 " + customPromptValue + "，打开ChatGPT 长按输入框粘贴后发送");
-              } else {
-                alert("请输入自定义提示词");
-              }
-            };
-            buttonContainer.appendChild(customCopyButton);
-            buttonContainer.appendChild(document.createElement("br"));
-
-            // 添加其它提示词按钮
-            var previousColor = "";
-            prompts.forEach(function(prompt, index) {
-              var promptName = prompt.substring(1, prompt.length - 3);
-              var button = document.createElement("button");
-              button.textContent = promptName;
-              button.style.setProperty("--button-color", getRandomColor(previousColor));
-              previousColor = button.style.getPropertyValue("--button-color");
-              button.onclick = function() {
-                var promptText = prompt.substring(prompt.indexOf("\n") + 1, prompt.length - 1).trim();
-                copyToClipboard(promptText);
-                alert("复制成功 " + promptText + "，打开ChatGPT 长按输入框粘贴后发送");
-              };
-              buttonContainer.appendChild(button);
-            });
-          }
-        }
-      };
-      rawFile.send(null);
-    }
-  </script>
+	<meta charset="UTF-8">
+	<title>ChatGPT提示词生成器</title>
+	<style>
+		input {
+			border: 1px solid #ccc;
+			padding: 10px;
+			width: 100%;
+			box-sizing: border-box;
+			margin-bottom: 20px;
+			font-size: 16px;
+		}
+		
+		button {
+			background-color: #4CAF50;
+			color: white;
+			padding: 14px 20px;
+			border: none;
+			cursor: pointer;
+			width: 100%;
+			font-size: 16px;
+		}
+		
+		button:hover {
+			background-color: #45a049;
+		}
+	</style>
 </head>
-<body onload="readFile()">
-  <div id="button-container"></div>
+<body>
+	<h1>ChatGPT提示词生成器</h1>
+	<p>请输入您的提示词：</p>
+	<textarea id="prompts" rows="5"></textarea>
+	<button onclick="copyToClipboard()">复制去打开ChatGPT粘贴</button>
+	<p id="copy-message"></p>
+	<script>
+		function copyToClipboard() {
+			var prompts = document.getElementById("prompts");
+			prompts.select();
+			document.execCommand("copy");
+			document.getElementById("copy-message").innerHTML = "已复制到剪贴板！";
+			setTimeout(function() {
+				document.getElementById("copy-message").innerHTML = "";
+			}, 3000);
+			window.location.href = "index.html";
+		}
+	</script>
 </body>
 </html>
