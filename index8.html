@@ -1,76 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>智能伙伴网页</title>
+    <title>ChatGPT</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            font-size: 16px;
-            margin: 10px;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 20px;
         }
-
+        
+        h1 {
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
         textarea {
             width: 100%;
-            height: auto; /* 修改为自动高度 */
-            border: 2px solid #ccc;
+            height: 150px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
             padding: 10px;
+            font-size: 16px;
             resize: none;
-            font-size: 48px; /* 修改为3倍字体 */
         }
-
+        
         button {
+            display: block;
             width: 100%;
-            height: 50px;
-            font-size: 20px;
-            background-color: #00a0e9;
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 18px;
+            background-color: #4caf50;
             color: white;
             border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
     </style>
-    <script>
-        // 定义一个函数，用于复制输入框的内容，并关闭当前页面并跳转到index.html /* 修改注释 */
-        function copyAndGo() {
-            // 获取输入框元素
-            var input = document.getElementById("input");
-            // 获取输入框的值
-            var value = input.value;
-            // 判断输入框是否为空
-            if (value == "") {
-                // 如果为空，弹出警告框
-                alert("请输入您的问题或让chgpt完成的任务");
-                // 结束函数
-                return;
-            }
-            // 如果不为空，给输入框的值加上"亲爱的Ai:"开头
-            value = "亲爱的Ai:" + value;
-            // 创建一个临时元素，用于复制内容
-            var temp = document.createElement("textarea");
-            // 设置临时元素的值为输入框的值
-            temp.value = value;
-            // 把临时元素添加到文档中
-            document.body.appendChild(temp);
-            // 选中临时元素的内容
-            temp.select();
-            // 复制临时元素的内容
-            document.execCommand("copy");
-            // 删除临时元素
-            document.body.removeChild(temp);
-            
-             // 弹出确认框，并关闭当前页面并跳转到index.html /* 修改代码 */
-             if (confirm("已复制成功，是否跳转到index.html？")) {
-                 window.open("index.html", "_self"); // 打开index.html并替换当前页面
-                 window.close(); // 关闭当前页面
-             }
-            
-        }
-    </script>
 </head>
 <body>
-    <form>
-        <textarea id="input" name="input" placeholder="请输入您的问题或让chgpt完成的任务"></textarea>
-        <button onclick="copyAndGo()">复制去打开Chatgpt粘贴</button>
-    </form>
+    <div class="container">
+        <h1>ChatGPT</h1>
+        <label for="input">请输入您的问题或让 ChatGPT 完成的任务：</label>
+        <textarea id="input" placeholder="请输入您的问题或让 ChatGPT 完成的任务"></textarea>
+        <button id="copyButton">复制去打开 ChatGPT 粘贴</button>
+    </div>
+
+    <script>
+        document.getElementById("copyButton").addEventListener("click", function() {
+            var inputText = document.getElementById("input").value; // 获取输入框的值
+            
+            if (inputText.trim() === "") { // 判断输入框是否为空
+                alert("您还没有输入，请输入您的问题或让 ChatGPT 完成的任务"); // 如果为空，弹出警告框
+                return; // 结束函数
+            } else { // 如果不为空
+                var promptText = "亲爱的Ai:" + inputText; // 给输入框的值加上"亲爱的Ai:"开头
+                var temp = document.createElement("textarea"); // 创建一个临时元素，用于复制内容
+                temp.value = promptText; // 设置临时元素的值为输入框的值
+                document.body.appendChild(temp); // 把临时元素添加到文档中
+                temp.select(); // 选中临时元素的内容
+                document.execCommand("copy"); // 复制临时元素的内容
+                document.body.removeChild(temp); // 删除临时元素
+                
+                alert("已复制成功"); // 弹出提示框
+                
+                var url = "index.html?prompt=" + encodeURIComponent(promptText); // 构造跳转的url，附加prompt参数
+                window.location.href = url; // 跳转到url
+            }
+        });
+    </script>
 </body>
 </html>
