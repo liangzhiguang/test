@@ -17,7 +17,7 @@
             border: 2px solid #ccc;
             padding: 10px;
             resize: none;
-            font-size: 24px; /* 修改为2倍字体 */
+            font-size: 48px; /* 修改为3倍字体 */
         }
 
         button {
@@ -30,7 +30,7 @@
         }
     </style>
     <script>
-        // 定义一个函数，用于复制输入框的内容，并跳转到index.html
+        // 定义一个函数，用于复制输入框的内容，并关闭当前页面并跳转到index.html /* 修改注释 */
         function copyAndGo() {
             // 获取输入框元素
             var input = document.getElementById("input");
@@ -58,9 +58,10 @@
             // 删除临时元素
             document.body.removeChild(temp);
             
-             // 弹出确认框，并跳转到index.html /* 新增代码 */
+             // 弹出确认框，并关闭当前页面并跳转到index.html /* 修改代码 */
              if (confirm("已复制成功，是否跳转到index.html？")) {
-                 window.location.href = "index.html";
+                 window.open("index.html", "_self"); // 打开index.html并替换当前页面
+                 window.close(); // 关闭当前页面
              }
             
         }
