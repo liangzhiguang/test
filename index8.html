@@ -79,7 +79,7 @@
                 document.execCommand("copy"); // 复制临时元素的内容
                 document.body.removeChild(temp); // 删除临时元素
                 
-                alert("强化成功,去ChatGPT粘贴发送"); // 弹出提示框
+                alert("强化成功,马上打开ChatGPT,长摁输入框粘贴,发送"); // 弹出提示框
                 
                 var url = "index.html?prompt=" + encodeURIComponent(promptText); // 构造跳转的url，附加prompt参数
                 window.location.href = url; // 跳转到url
