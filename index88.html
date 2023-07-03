@@ -64,10 +64,6 @@
     </div>
 
     <script>
-        // 引入fs和path模块
-        const fs = require('fs');
-        const path = require('path');
-
         document.getElementById("copyButton").addEventListener("click", function() {
             var inputText = document.getElementById("input").value; // 获取输入框的值
             
@@ -86,21 +82,22 @@
                 alert("强化成功,马上打开ChatGPT,长摁输入框粘贴,发送"); // 弹出提示框
                 
                 var url = "index.html?prompt=" + encodeURIComponent(promptText); // 构造跳转的url，附加prompt参数
-                window.location.href = url;
-                // 获取当前网页的路径
-                var currentPath = window.location.pathname;
-            // 获取当前网页所在的目录
-                var currentDir = path.dirname(currentPath);
-            // 拼接目标文件的路径
-                var targetFile = path.join(currentDir, 'log_prompt.txt');
-            // 定义分割线
-                var separator = '\n------------------------\n';
-            // 追加写入数据到文件中，如果文件不存在，就创建一个
-            fs.writeFile(targetFile, separator + promptText, {flag: 'a'}, (err) => {
-                if (err) throw err; // 如果出错，抛出异常
-                console.log('The data was appended to file!'); // 如果成功，打印提示信息
-            });
-        }
-    });
-</script>
-</body> </html>
+                window.location.href = url; // 跳转到url
+
+                var fileName = "log_prompt.txt"; // 设置文件名
+                var fileContent = "\n-----------------\n" + promptText; // 设置文件内容，加上分割线
+                var blob = new Blob([fileContent], {type: "text/plain"}); // 创建一个blob对象，用于写入文件
+                var reader = new FileReader(); // 创建一个文件读取器对象，用于读取文件
+                reader.onload = function(e) { // 当文件读取完成时
+                    var dataUrl = e.target.result; // 获取文件的数据url
+                    var link = document.createElement("a"); // 创建一个链接元素，用于下载文件
+                    link.href = dataUrl; // 设置链接的href属性为数据url
+                    link.download = fileName; // 设置链接的download属性为文件名
+                    link.click(); // 点击链接，下载文件
+                };
+                reader.readAsDataURL(blob); // 读取blob对象，生成数据url
+            }
+        });
+    </script>
+</body>
+</html>
