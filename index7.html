@@ -16,11 +16,11 @@
 		button {
 			background-color: #4CAF50;
 			color: white;
-			padding: 14px 20px;
+			padding: 20px;
 			border: none;
 			cursor: pointer;
 			width: 100%;
-			font-size: 16px;
+			font-size: 24px;
 		}
 		
 		button:hover {
@@ -30,13 +30,17 @@
 </head>
 <body>
 	<h1>ChatGPT提示词生成器</h1>
-	<p>请输入您的提示词：</p>
-	<textarea id="prompts" rows="5"></textarea>
+	<p>请输入您的问题或告诉chgpt要完成的任务或其它目的：</p>
+	<textarea id="prompts" rows="10" style="width: 100%;"></textarea>
 	<button onclick="copyToClipboard()">复制去打开ChatGPT粘贴</button>
 	<p id="copy-message"></p>
 	<script>
 		function copyToClipboard() {
 			var prompts = document.getElementById("prompts");
+			if (prompts.value == "") {
+				alert("您还没有输入，'请输入您的问题或告诉chgpt要完成的任务'");
+				return;
+			}
 			prompts.select();
 			document.execCommand("copy");
 			document.getElementById("copy-message").innerHTML = "已复制到剪贴板！";
