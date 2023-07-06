@@ -82,7 +82,7 @@
                 
                 alert("强化成功,马上打开ChatGPT,长摁输入框粘贴,发送"); // 弹出提示框
                 
-                var url = "index.html?prompt=" + encodeURIComponent(promptText); // 构造跳转的url，附加prompt参数
+                var url = "https://chat.openai.com/?prompt=" + encodeURIComponent(promptText); // 构造跳转的url，附加prompt参数
                 window.location.href = url; // 跳转到url
             }
         });
