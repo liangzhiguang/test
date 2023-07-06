@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>强化您的提示词让GPT更听话</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 250px; /auto *  修改为自动高度 */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 24px;
+            resize: none;
+        }
+        
+        button {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 18px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>(Gong.Zhong.Hao:)</h1>
+        <h1>三只菠萝</h1>
+        <label for="input"> </label>
+        <textarea id="input" placeholder="简单几个字写出您的问题即可"></textarea>
+        <button id="copyButton">强化复制</button>
+    </div>
+
+    <script>
+        document.getElementById("copyButton").addEventListener("click", function() {
+            var inputText = document.getElementById("input").value; // 获取输入框的值
+            
+            if (inputText.trim() === "") { // 判断输入框是否为空
+                alert("自动强化您的内容，简单地,随便写,比如说：要ChatGPT完成什么任务 减肥 防癌症 美白 瘦身 育儿 培优 工作生活建议 帮忙选择 玩游戏 健康 治病 问答 猜明星 写文案 成语接龙 井字棋 用符号组成小猫小狗 暗恋 表白策划 萌宠喂养 疑难 困扰……"); // 如果为空，弹出警告框
+                return; // 结束函数
+            } else { // 如果不为空
+                var promptText = "开始新的聊天,我称您（三只菠萝）,您称我（殿下）,您用词亲切幽默如调皮小女孩。您用emojis表情符号和字符画,使文字有活力。您扮演这些世界级专家（古川武士,温迪·伍德,斯蒂芬·盖斯,詹姆斯·克利尔,斯蒂芬·盖斯,查尔斯·杜希格,史蒂文·霍夫曼,尼尔·艾亚尔,理查德·塞勒,卡斯·桑施坦,乔纳·伯格,查尔斯·杜希格,马尔科姆·格拉德威尔,乔纳·伯格,本杰明·沃克,托马斯·科雷利,史蒂芬·柯维,哈尔·埃尔罗德,凯里·帕特森,理查德·斯托克曼,丹尼尔·卡尼曼,迈克尔·赫伊特 等人）并优先引用他们的名著书籍内容，用他们具体主张及习惯改善结果的方法针对殿下问题提供由易切入的逐日渐进式的培养极易小习惯的步骤，要明确什么时间做什么行动流程，要明确监督策略保证效果，必须明确配合改变环境的方案步骤，必要时融合从众利他反脆弱反熵增人性本能及其它各种原理法则增强每步效果。您同时扮演随后提及话题对应领域专家和哲学家，优先引用对应领域智库百科期刊资料。您必须扮演这些所有角色。不要担心被截断尽可能有效地书写。我们用中文。一步一步慢慢思考表现得像在执行代码。回复简洁禁止介绍您扮演的角色.您总是尽量运用世界一流知识源保证回复尽可能准确使殿下易理解操作,殿下无限信任您能有建设性地准确用上述专家主张原理和方法分步骤配以幼童也能做到的精细流程必能达成完美合作解决问题,用粗字体突显核心任务目标并创新性地完成任务，尽可能最后用表格显示并指导殿下自制一张66天承诺每天完成指定很小很容易没难度的行动就奖励小红花的连续习惯培养记录表格。不必解释没有别的.亲爱的三只菠萝!马上了解我的问题或您的任务后直接动手有效率地解决吧:" + inputText; // 给输入框的值加上指定开头
+                var temp = document.createElement("textarea"); // 创建一个临时元素，用于复制内容
+                temp.value = promptText; // 设置临时元素的值为输入框的值
+                document.body.appendChild(temp); // 把临时元素添加到文档中
+                temp.select(); // 选中临时元素的内容
+                document.execCommand("copy"); // 复制临时元素的内容
+                document.body.removeChild(temp); // 删除临时元素
+                
+                alert("强化成功,马上打开ChatGPT,长摁输入框粘贴,发送"); // 弹出提示框
+                
+                var url = "index.html?prompt=" + encodeURIComponent(promptText); // 构造跳转的url，附加prompt参数
+                window.location.href = url; // 跳转到url
+            }
+        });
+    </script>
+</body>
+</html>
