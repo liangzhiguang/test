@@ -34,21 +34,35 @@
     </style>
 </head>
 <body>
-    <p class="typing">中英文mixed打字effect，作者：张鑫旭</p>
+    <pre class="typing" id="textContainer"></pre>
     
     <script>
-        function playTypeSound() {
-            var audio = new Audio('type-sound.mp3'); // 替换为实际的音频文件路径
-            audio.play();
-        }
+        var textContainer = document.getElementById('textContainer');
+        var textLines = [];
 
-        // 监听动画开始事件，在每个字符打印完成时触发播放音频
-        var typingElement = document.querySelector('.typing');
-        typingElement.addEventListener('animationstart', function (event) {
-            if (event.animationName === 'typing') {
-                playTypeSound();
-            }
-        });
+        // 使用fetch加载文本文件
+        fetch('prompt.txt')
+            .then(response => response.text())
+            .then(text => {
+                textLines = text.split('\n'); // 将文本按行拆分为数组
+                startTyping();
+            });
+
+        function startTyping() {
+            var lineIndex = 0;
+            var lineLength = textLines.length;
+
+            // 创建一个定时器，每隔一定时间显示下一行文本
+            var typingInterval = setInterval(function () {
+                if (lineIndex < lineLength) {
+                    var currentLine = textLines[lineIndex];
+                    textContainer.textContent += currentLine + '\n';
+                    lineIndex++;
+                } else {
+                    clearInterval(typingInterval); // 所有行都显示完成后清除定时器
+                }
+            }, 100);
+        }
     </script>
 </body>
 </html>
