@@ -32,26 +32,6 @@
       text-align: left;
       line-height: 1.5;
     }
-    .typing {
-      display: inline-block;
-      width: 0;
-      height: 1.25em;
-      border-right: 1px solid white;
-      animation: typing 3.5s steps(37, end), blink-caret .75s step-end infinite;
-      font-family: "Consolas", "Monaco", monospace;
-      word-break: break-all;
-      overflow: hidden;
-    }
-    /* 打印效果 */
-    @keyframes typing {
-      from { width: 0; }
-      to { width: 18.5em; }
-    }
-    /* 光标闪啊闪 */
-    @keyframes blink-caret {
-      from, to { border-color: transparent; }
-      50% { border-color: white; }
-    }
   </style>
 </head>
 <body>
@@ -64,9 +44,6 @@
   <script>
     const textInput = document.getElementById("text-input");
     const typeSound = document.getElementById("type-sound");
-    const typing = document.createElement("span");
-    typing.classList.add("typing");
-    textInput.appendChild(typing);
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "prompt.txt");
     xhr.onreadystatechange = function() {
@@ -79,8 +56,9 @@
         function typeWriter() {
           if (i < textArray.length) {
             if (j < textArray[i].length) {
-              typing.innerHTML = textArray[i].charAt(j);
+              textInput.innerHTML += textArray[i].charAt(j);
               j++;
+              typeSound.currentTime = 0;
               typeSound.play();
               setTimeout(typeWriter, 100);
             } else {
@@ -102,15 +80,6 @@
             event.preventDefault();
           }
         });
-
-        setInterval(function() {
-          const range = window.getSelection().getRangeAt(0);
-          const rect = range.getBoundingClientRect();
-          const x = rect.right + window.scrollX + 50;
-          const y = rect.top + window.scrollY + 50;
-          typing.style.left = x + "px";
-          typing.style.top = y + "px";
-        }, 50);
       }
     };
     xhr.send();
