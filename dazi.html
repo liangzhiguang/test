@@ -1,35 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<title>动态打字机</title>
+  <meta charset="UTF-8">
+  <title>Typewriter Animation</title>
+  <style>
+    #text {
+      font-family: monospace;
+      font-size: 24px;
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 <body>
-	<div id="text"></div>
-	<audio id="typing-sound">
-		<source src="type-sound.mp3" type="audio/mpeg">
-	</audio>
-	<div id="prompt" style="display: none;"></div>
-	<script>
-		const promptElement = document.getElementById('prompt');
-		fetch('prompt.txt')
-			.then(response => response.text())
-			.then(text => promptElement.innerText = text);
-		
-		const text = document.getElementById('text');
-		const typingSound = document.getElementById('typing-sound');
-		let i = 0;
-		const typingInterval = setInterval(() => {
-			const promptText = promptElement.innerText.trim();
-			if (i >= promptText.length) {
-				clearInterval(typingInterval);
-				return;
-			}
-			text.innerHTML += promptText.charAt(i);
-			i++;
-			typingSound.currentTime = 0;
-			typingSound.play();
-		}, 100);
-	</script>
+  <div id="text"></div>
+  <audio id="type-sound">
+    <source src="type-sound.mp3" type="audio/mpeg">
+  </audio>
+  <script>
+    const text = document.getElementById("text");
+    const typeSound = document.getElementById("type-sound");
+    const textArray = `prompt.txt文件中的多行复杂文字`.split("\n");
+    let i = 0;
+    let j = 0;
+    let isTyping = true;
+
+    function typeWriter() {
+      if (i < textArray.length) {
+        if (j < textArray[i].length) {
+          text.innerHTML += textArray[i].charAt(j);
+          j++;
+          typeSound.play();
+          setTimeout(typeWriter, 100);
+        } else {
+          text.innerHTML += "\n";
+          i++;
+          j = 0;
+          setTimeout(typeWriter, 500);
+        }
+      } else {
+        isTyping = false;
+      }
+    }
+
+    typeWriter();
+
+    document.addEventListener("keydown", function(event) {
+      if (isTyping) {
+        event.preventDefault();
+      }
+    });
+  </script>
 </body>
 </html>
