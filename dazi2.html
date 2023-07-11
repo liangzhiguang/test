@@ -1,47 +1,119 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        .typing {
-            width: 18.5em;
-            height: 1.25em;
-            border-right: 1px solid transparent;
-            animation: typing 3.5s steps(37, end), blink-caret .75s step-end infinite;
-            font-family: Consolas, Monaco;
-            word-break: break-all;
-            overflow: hidden;
-        }
-        
-        /* 打印效果 */
-        @keyframes typing {
-            from {
-                width: 0;
-            }
-            to {
-                width: 18.5em;
-            }
-        }
-        
-        /* 光标闪啊闪 */
-        @keyframes blink-caret {
-            from, to {
-                border-color: transparent;
-            }
-            50% {
-                border-color: currentColor;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Typewriter Animation</title>
+  <style>
+    body {
+      margin: 20px;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-end;
+      background-image: url("bg.jpg");
+      background-size: cover;
+      background-position: center;
+    }
+    #text-input {
+      font-family: "微软雅黑", sans-serif;
+      font-size: 120px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 4px 4px 8px black;
+      outline: none;
+      border: none;
+      background-color: transparent;
+      white-space: pre-wrap;
+      margin-top: 60px;
+      margin-bottom: 40px;
+      padding: 20px;
+      position: relative;
+      text-align: left;
+      line-height: 1.5;
+    }
+    .typing {
+      display: inline-block;
+      width: 0;
+      height: 1.25em;
+      border-right: 1px solid white;
+      animation: typing 3.5s steps(37, end), blink-caret .75s step-end infinite;
+      font-family: "Consolas", "Monaco", monospace;
+      word-break: break-all;
+      overflow: hidden;
+    }
+    /* 打印效果 */
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 18.5em; }
+    }
+    /* 光标闪啊闪 */
+    @keyframes blink-caret {
+      from, to { border-color: transparent; }
+      50% { border-color: white; }
+    }
+  </style>
 </head>
 <body>
-    <p class="typing">中英文mixed打字effect，作者：张鑫旭</p>
-    <button onclick="playTypeSound()">播放音效</button>
-    
-    <script>
-        function playTypeSound() {
-            var audio = new Audio('type-sound.mp3'); // 替换为实际的音频文件路径
-            audio.play();
+  <div id="text">
+    <div id="text-input" contenteditable="true"></div>
+  </div>
+  <audio id="type-sound">
+    <source src="type-sound.mp3" type="audio/mpeg">
+  </audio>
+  <script>
+    const textInput = document.getElementById("text-input");
+    const typeSound = document.getElementById("type-sound");
+    const typing = document.createElement("span");
+    typing.classList.add("typing");
+    textInput.appendChild(typing);
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "prompt.txt");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        const textArray = xhr.responseText.split("\n");
+        let i = 0;
+        let j = 0;
+        let isTyping = true;
+
+        function typeWriter() {
+          if (i < textArray.length) {
+            if (j < textArray[i].length) {
+              typing.innerHTML = textArray[i].charAt(j);
+              j++;
+              typeSound.play();
+              setTimeout(typeWriter, 100);
+            } else {
+              textInput.innerHTML += "<br>";
+              i++;
+              j = 0;
+              textInput.scrollTop = textInput.scrollHeight;
+              setTimeout(typeWriter, 500);
+            }
+          } else {
+            isTyping = false;
+          }
         }
-    </script>
+
+        typeWriter();
+
+        document.addEventListener("keydown", function(event) {
+          if (isTyping) {
+            event.preventDefault();
+          }
+        });
+
+        setInterval(function() {
+          const range = window.getSelection().getRangeAt(0);
+          const rect = range.getBoundingClientRect();
+          const x = rect.right + window.scrollX + 50;
+          const y = rect.top + window.scrollY + 50;
+          typing.style.left = x + "px";
+          typing.style.top = y + "px";
+        }, 50);
+      }
+    };
+    xhr.send();
+  </script>
 </body>
 </html>
