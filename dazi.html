@@ -1,64 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        .typing {
-            width: 18.5em;
-            height: auto;
-            border-right: 1px solid transparent;
-            animation: typing 3.5s steps(37, end), blink-caret .75s step-end infinite;
-            font-family: Consolas, Monaco;
-            white-space: pre-wrap; /* 保留换行符 */
-            word-break: break-all;
-            overflow: hidden;
-        }
-        
-        /* 打印效果 */
-        @keyframes typing {
-            from {
-                width: 0;
-            }
-            to {
-                width: 18.5em;
-            }
-        }
-        
-        /* 光标闪啊闪 */
-        @keyframes blink-caret {
-            from, to {
-                border-color: transparent;
-            }
-            50% {
-                border-color: currentColor;
-            }
-        }
-    </style>
+	<meta charset="UTF-8">
+	<title>动态打字机</title>
 </head>
 <body>
-    <pre class="typing" id="textContainer"></pre>
-    
-    <script>
-        var textContainer = document.getElementById('textContainer');
-        var textLines = [];
-        var lineIndex = 0;
-
-        // 使用fetch加载文本文件
-        fetch('prompt.txt')
-            .then(response => response.text())
-            .then(text => {
-                textLines = text.split('\n'); // 将文本按行拆分为数组
-                startTyping();
-            });
-
-        function startTyping() {
-            if (lineIndex < textLines.length) {
-                var currentLine = textLines[lineIndex];
-                textContainer.textContent += currentLine + '\n';
-                lineIndex++;
-                textContainer.scrollTop = textContainer.scrollHeight; // 自动滚动到底部
-                setTimeout(startTyping, 1000); // 设置递归调用，控制打字速度
-            }
-        }
-    </script>
+	<div id="text"></div>
+	<script>
+		const text = document.getElementById('text');
+		const promptText = document.getElementById('prompt.txt').innerText;
+		let i = 0;
+		const typingInterval = setInterval(() => {
+			if (i >= promptText.length) {
+				clearInterval(typingInterval);
+				return;
+			}
+			text.innerHTML += promptText.charAt(i);
+			i++;
+			const audio = new Audio('key-typing-sound.mp3');
+			audio.play();
+		}, 100);
+	</script>
+	<audio id="typing-sound">
+		<source src="key-typing-sound.mp3" type="audio/mpeg">
+	</audio>
 </body>
 </html>
