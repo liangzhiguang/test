@@ -4,10 +4,20 @@
   <meta charset="UTF-8">
   <title>Typewriter Animation</title>
   <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+    }
     #text {
       font-family: monospace;
       font-size: 24px;
       white-space: pre-wrap;
+      text-align: center;
+      margin-bottom: 20px;
     }
   </style>
 </head>
@@ -36,9 +46,10 @@
               typeSound.play();
               setTimeout(typeWriter, 100);
             } else {
-              text.innerHTML += "\n";
+              text.innerHTML += "<br>";
               i++;
               j = 0;
+              text.style.marginBottom = (20 * (textArray.length - i)) + "px";
               setTimeout(typeWriter, 500);
             }
           } else {
