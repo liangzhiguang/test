@@ -11,6 +11,9 @@
       display: flex;
       justify-content: flex-start;
       align-items: flex-end;
+      background-image: url("bg.png");
+      background-size: cover;
+      background-position: center;
     }
     #text {
       font-family: "微软雅黑", sans-serif;
@@ -20,17 +23,39 @@
       text-align: left;
       margin-bottom: 40px;
       padding: 20px;
+      color: white;
+      text-shadow: 2px 2px 4px black;
+    }
+    #cursor {
+      display: inline-block;
+      width: 10px;
+      height: 60px;
+      background-color: white;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0% {
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
     }
   </style>
 </head>
 <body>
   <div id="text"></div>
+  <div id="cursor"></div>
   <audio id="type-sound">
     <source src="type-sound.mp3" type="audio/mpeg">
   </audio>
   <script>
     const text = document.getElementById("text");
     const typeSound = document.getElementById("type-sound");
+    const cursor = document.getElementById("cursor");
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "prompt.txt");
     xhr.onreadystatechange = function() {
