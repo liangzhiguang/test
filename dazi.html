@@ -6,23 +6,30 @@
 </head>
 <body>
 	<div id="text"></div>
+	<audio id="typing-sound">
+		<source src="type-sound.mp3" type="audio/mpeg">
+	</audio>
+	<div id="prompt" style="display: none;"></div>
 	<script>
+		const promptElement = document.getElementById('prompt');
+		fetch('prompt.txt')
+			.then(response => response.text())
+			.then(text => promptElement.innerText = text);
+		
 		const text = document.getElementById('text');
-		const promptText = document.getElementById('prompt.txt').innerText;
+		const typingSound = document.getElementById('typing-sound');
 		let i = 0;
 		const typingInterval = setInterval(() => {
+			const promptText = promptElement.innerText.trim();
 			if (i >= promptText.length) {
 				clearInterval(typingInterval);
 				return;
 			}
 			text.innerHTML += promptText.charAt(i);
 			i++;
-			const audio = new Audio('key-typing-sound.mp3');
-			audio.play();
+			typingSound.currentTime = 0;
+			typingSound.play();
 		}, 100);
 	</script>
-	<audio id="typing-sound">
-		<source src="key-typing-sound.mp3" type="audio/mpeg">
-	</audio>
 </body>
 </html>
