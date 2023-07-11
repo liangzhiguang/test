@@ -46,7 +46,7 @@
     const textInput = document.getElementById("text-input");
     const typeSound = document.getElementById("type-sound");
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", "prompt.txt");
+    xhr.open("GET", "dazi.txt");
     xhr.onreadystatechange = function() {
       if (xhr.readyState === 4 && xhr.status === 200) {
         const textArray = xhr.responseText.split("\n");
