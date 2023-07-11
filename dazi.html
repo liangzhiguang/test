@@ -4,10 +4,11 @@
     <style>
         .typing {
             width: 18.5em;
-            height: 1.25em;
+            height: auto;
             border-right: 1px solid transparent;
             animation: typing 3.5s steps(37, end), blink-caret .75s step-end infinite;
             font-family: Consolas, Monaco;
+            white-space: pre-wrap; /* 保留换行符 */
             word-break: break-all;
             overflow: hidden;
         }
@@ -39,6 +40,7 @@
     <script>
         var textContainer = document.getElementById('textContainer');
         var textLines = [];
+        var lineIndex = 0;
 
         // 使用fetch加载文本文件
         fetch('prompt.txt')
@@ -49,19 +51,13 @@
             });
 
         function startTyping() {
-            var lineIndex = 0;
-            var lineLength = textLines.length;
-
-            // 创建一个定时器，每隔一定时间显示下一行文本
-            var typingInterval = setInterval(function () {
-                if (lineIndex < lineLength) {
-                    var currentLine = textLines[lineIndex];
-                    textContainer.textContent += currentLine + '\n';
-                    lineIndex++;
-                } else {
-                    clearInterval(typingInterval); // 所有行都显示完成后清除定时器
-                }
-            }, 100);
+            if (lineIndex < textLines.length) {
+                var currentLine = textLines[lineIndex];
+                textContainer.textContent += currentLine + '\n';
+                lineIndex++;
+                textContainer.scrollTop = textContainer.scrollHeight; // 自动滚动到底部
+                setTimeout(startTyping, 1000); // 设置递归调用，控制打字速度
+            }
         }
     </script>
 </body>
