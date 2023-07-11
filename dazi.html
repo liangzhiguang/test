@@ -35,8 +35,8 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 60px;
-      height: 60px;
+      width: 120px;
+      height: 120px;
       background-image: url("pen.png");
       background-size: contain;
       background-repeat: no-repeat;
@@ -93,12 +93,14 @@
           }
         });
 
-        textInput.addEventListener("input", function(event) {
+        setInterval(function() {
           const range = window.getSelection().getRangeAt(0);
           const rect = range.getBoundingClientRect();
-          pen.style.left = rect.right + "px";
-          pen.style.top = rect.top + "px";
-        });
+          const x = rect.right + window.scrollX;
+          const y = rect.top + window.scrollY;
+          pen.style.left = x + "px";
+          pen.style.top = y + "px";
+        }, 50);
       }
     };
     xhr.send();
