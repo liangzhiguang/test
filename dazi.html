@@ -30,33 +30,24 @@
       padding: 20px;
       position: relative;
     }
-    #cursor {
-      display: inline-block;
-      width: 10px;
-      height: 60px;
-      background-color: white;
-      animation: blink 1s infinite;
+    #pen {
+      display: none;
       position: absolute;
       top: 0;
       left: 0;
-    }
-    @keyframes blink {
-      0% {
-        opacity: 0;
-      }
-      50% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-      }
+      width: 60px;
+      height: 60px;
+      background-image: url("pen.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
     }
   </style>
 </head>
 <body>
   <div id="text">
     <div id="text-input" contenteditable="true"></div>
-    <div id="cursor"></div>
+    <div id="pen"></div>
   </div>
   <audio id="type-sound">
     <source src="type-sound.mp3" type="audio/mpeg">
@@ -64,7 +55,7 @@
   <script>
     const textInput = document.getElementById("text-input");
     const typeSound = document.getElementById("type-sound");
-    const cursor = document.getElementById("cursor");
+    const pen = document.getElementById("pen");
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "prompt.txt");
     xhr.onreadystatechange = function() {
@@ -81,6 +72,7 @@
               j++;
               typeSound.play();
               setTimeout(typeWriter, 100);
+              pen.style.display = "block";
             } else {
               textInput.innerHTML += "<br>";
               i++;
@@ -104,8 +96,8 @@
         textInput.addEventListener("input", function(event) {
           const range = window.getSelection().getRangeAt(0);
           const rect = range.getBoundingClientRect();
-          cursor.style.left = rect.right + "px";
-          cursor.style.top = rect.top + "px";
+          pen.style.left = rect.right + "px";
+          pen.style.top = rect.top + "px";
         });
       }
     };
