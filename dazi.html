@@ -10,7 +10,7 @@
       height: 100vh;
       display: flex;
       justify-content: flex-start;
-      align-items: flex-end;
+      align-items: flex-start;
       background-image: url("bg.png");
       background-size: cover;
       background-position: center;
@@ -76,7 +76,7 @@
               text.innerHTML += "<br>";
               i++;
               j = 0;
-              text.scrollTop = text.scrollHeight;
+              text.scrollTop = text.scrollHeight - text.clientHeight;
               setTimeout(typeWriter, 500);
             }
           } else {
