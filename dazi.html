@@ -49,7 +49,7 @@
               text.innerHTML += "<br>";
               i++;
               j = 0;
-              text.style.marginBottom = (20 * (textArray.length - i)) + "px";
+              text.scrollTop = text.scrollHeight;
               setTimeout(typeWriter, 500);
             }
           } else {
