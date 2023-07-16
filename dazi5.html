@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Typewriter Animation</title>
+  <style>
+    body {
+      margin: 20px;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-end;
+      background-color: white;
+    }
+    #text-input {
+      font-size: 40px;
+      color: black;
+      text-shadow: 2px 2px 4px #000000;
+      outline: none;
+      border: none;
+      background-color: transparent;
+      white-space: pre-wrap;
+      margin-top: 60px;
+      margin-bottom: 40px;
+      padding: 20px;
+      position: relative;
+      text-align: left;
+      line-height: 1.5;
+    }
+    #text-input:first-child {
+      font-size: 120px;
+    }
+  </style>
+</head>
+<body>
+  <div id="text">
+    <div id="text-input" contenteditable="true"></div>
+  </div>
+  <audio id="type-sound">
+    <source src="type-sound.mp3" type="audio/mpeg">
+  </audio>
+  <script>
+    const textInput = document.getElementById("text-input");
+    const typeSound = document.getElementById("type-sound");
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "dazi.txt");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        const textArray = xhr.responseText.split("\n");
+        let i = 0;
+        let j = 0;
+        let isTyping = true;
+
+        function typeWriter() {
+          if (i < textArray.length) {
+            if (j < textArray[i].length) {
+              textInput.innerHTML += textArray[i].charAt(j);
+              j++;
+              typeSound.currentTime = 0;
+              typeSound.play();
+              setTimeout(typeWriter, 100);
+            } else {
+              textInput.innerHTML += "<br>";
+              i++;
+              j = 0;
+              textInput.scrollTop = textInput.scrollHeight;
+              setTimeout(typeWriter, 500);
+            }
+          } else {
+            isTyping = false;
+          }
+        }
+
+        textInput.innerHTML += "<div>" + textArray[0] + "</div>";
+        i++;
+        typeWriter();
+
+        document.addEventListener("keydown", function(event) {
+          if (isTyping) {
+            event.preventDefault();
+          }
+        });
+      }
+    };
+    xhr.send();
+  </script>
+</body>
+</html>
