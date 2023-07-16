@@ -14,7 +14,7 @@
       background-color: white;
     }
     #text-input {
-      font-size: 10px; /* 将字体大小调小为30px */
+      font-size: 10px;
       color: black;
       text-shadow: 2px 2px 4px #000000;
       outline: none;
@@ -30,10 +30,10 @@
       font-family: "Courier New", monospace;
     }
     #text-input:first-child {
-      font-size: 90px; /* 将第一行文字的字体大小调小为90px */
+      font-size: 90px;
     }
     #text-input:nth-child(3) {
-      font-size: 90px; /* 将第三行文字的字体大小调小为90px */
+      font-size: 90px;
     }
   </style>
 </head>
@@ -45,13 +45,20 @@
     <source src="type-sound.mp3" type="audio/mpeg">
   </audio>
   <script>
-    const textInput = document.getElementById("text-input");
-    const typeSound = document.getElementById("type-sound");
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "dazi.txt");
     xhr.onreadystatechange = function() {
       if (xhr.readyState === 4 && xhr.status === 200) {
         const textArray = xhr.responseText.split("\n");
+        let maxLineLength = 0;
+        for (let i = 0; i < textArray.length; i++) {
+          if (textArray[i].length > maxLineLength) {
+            maxLineLength = textArray[i].length;
+          }
+        }
+        const fontSize = Math.floor(window.innerWidth / maxLineLength);
+        const textInput = document.getElementById("text-input");
+        textInput.style.fontSize = fontSize + "px";
         let i = 0;
         let j = 0;
         let isTyping = true;
