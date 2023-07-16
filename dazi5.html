@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8" />
   <title>Typewriter Animation</title>
   <style>
     body {
@@ -51,14 +51,17 @@
       if (xhr.readyState === 4 && xhr.status === 200) {
         const textArray = xhr.responseText.split("\n");
         let maxLineLength = 0;
+        let fullText = "";
         for (let i = 0; i < textArray.length; i++) {
           if (textArray[i].length > maxLineLength) {
             maxLineLength = textArray[i].length;
           }
+          fullText += textArray[i] + "\n";
         }
         const fontSize = Math.floor(window.innerWidth / maxLineLength);
         const textInput = document.getElementById("text-input");
         textInput.style.fontSize = fontSize + "px";
+        textInput.innerHTML = fullText;
         let i = 0;
         let j = 0;
         let isTyping = true;
@@ -66,13 +69,12 @@
         function typeWriter() {
           if (i < textArray.length) {
             if (j < textArray[i].length) {
-              textInput.innerHTML += textArray[i].charAt(j);
+              textInput.childNodes[i].textContent += textArray[i].charAt(j);
               j++;
               typeSound.currentTime = 0;
               typeSound.play();
               setTimeout(typeWriter, 100);
             } else {
-              textInput.innerHTML += "<br>";
               i++;
               j = 0;
               textInput.scrollTop = textInput.scrollHeight;
@@ -83,10 +85,6 @@
           }
         }
 
-        textInput.innerHTML += "<div>" + textArray[0] + "</div>";
-        textInput.innerHTML += "<div>" + textArray[1] + "</div>";
-        textInput.innerHTML += "<div>" + textArray[2] + "</div>";
-        i = 3;
         typeWriter();
 
         document.addEventListener("keydown", function(event) {
