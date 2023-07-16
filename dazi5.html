@@ -31,6 +31,9 @@
     #text-input:first-child {
       font-size: 120px;
     }
+    #text-input:nth-child(3) {
+      font-size: 120px;
+    }
   </style>
 </head>
 <body>
@@ -73,7 +76,9 @@
         }
 
         textInput.innerHTML += "<div>" + textArray[0] + "</div>";
-        i++;
+        textInput.innerHTML += "<div>" + textArray[1] + "</div>";
+        textInput.innerHTML += "<div>" + textArray[2] + "</div>";
+        i = 3;
         typeWriter();
 
         document.addEventListener("keydown", function(event) {
