@@ -4,11 +4,6 @@
   <meta charset="UTF-8">
   <title>Typewriter Animation</title>
   <style>
-    @font-face {
-      font-family: 'maozedong';
-      src: url('maozedong.ttf') format('truetype');
-    }
-
     body {
       margin: 20px;
       padding: 0;
@@ -16,14 +11,10 @@
       display: flex;
       justify-content: flex-start;
       align-items: flex-end;
-      background-image: url("bg.jpg");
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
+      background-color: white;
+      font-family: "Microsoft YaHei", sans-serif;
     }
     #text-input {
-      font-family: "maozedong", sans-serif;
-      font-size: 120px;
       color: black;
       text-shadow: 2px 2px 4px #000000;
       outline: none;
@@ -36,6 +27,13 @@
       position: relative;
       text-align: left;
       line-height: 1.5;
+      font-family: "Microsoft YaHei", sans-serif;
+      font-weight: bold;
+      overflow-y: scroll; /* Enable vertical scrolling */
+    }
+    #text-input:first-child {
+    }
+    #text-input:nth-child(3) {
     }
   </style>
 </head>
@@ -58,6 +56,18 @@
         let j = 0;
         let isTyping = true;
 
+        // Determine the maximum number of characters in a line
+        let maxLineLength = 0;
+        for (let k = 0; k < textArray.length; k++) {
+          if (textArray[k].length > maxLineLength) {
+            maxLineLength = textArray[k].length;
+          }
+        }
+
+        // Set the font size based on the maximum line length
+        let fontSize = Math.floor(window.innerWidth / maxLineLength);
+        textInput.style.fontSize = fontSize + "px";
+
         function typeWriter() {
           if (i < textArray.length) {
             if (j < textArray[i].length) {
@@ -78,6 +88,10 @@
           }
         }
 
+        textInput.innerHTML += "<div><b>" + textArray[0] + "</b></div>";
+        textInput.innerHTML += "<div><b>" + textArray[1] + "</b></div>";
+        textInput.innerHTML += "<div><b>" + textArray[2] + "</b></div>";
+        i = 3;
         typeWriter();
 
         document.addEventListener("keydown", function(event) {
