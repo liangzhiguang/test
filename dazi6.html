@@ -2,33 +2,163 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Random Background Image</title>
+  <title>Typewriter Animation</title>
   <style>
     body {
-      margin: 0;
+      margin: 20px;
       padding: 0;
       height: 100vh;
-      background-size: cover;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-end;
+      background-color: white;
+      font-family: "Microsoft YaHei", sans-serif;
+    }
+    #text-input {
+      color: black;
+      outline: none;
+      border: none;
+      background-color: transparent;
+      white-space: pre-wrap;
+      margin-top: 60px;
+      margin-bottom: 40px;
+      padding: 20px;
+      position: relative;
+      text-align: left;
+      line-height: 1.5;
+      font-family: "Microsoft YaHei", sans-serif;
+      font-weight: bold;
+      text-shadow: none;
+      overflow-y: scroll; /* Enable vertical scrolling */
+    }
+    #text-input:first-child {
+    }
+    #text-input:nth-child(3) {
     }
   </style>
 </head>
 <body>
+  <div id="text">
+    <div id="text-input" contenteditable="true"></div>
+  </div>
+  <audio id="type-sound">
+    <source src="maomi.mp3" type="audio/mpeg">
+  </audio>
   <script>
-    // Set the background image based on the current time
-    let date = new Date();
-    let secondsLastDigit = date.getSeconds() % 10;
+    const textInput = document.getElementById("text-input");
+    const typeSound = document.getElementById("type-sound");
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "dazi.txt");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        const textArray = xhr.responseText.split("\n");
+        let i = 0;
+        let j = 0;
+        let isTyping = true;
 
-    // Set the background image
-    let bgFolderName = "bg" + secondsLastDigit.toString();
-    
-    // Get the list of image files in the bg folder
-    fetch(bgFolderName)
-      .then(response => response.text())
-      .then(data => {
-        let bgImages = data.split("\n").filter(file => file.match(/\.(jpg|jpeg|png|gif)$/i));
-        let randomIndex = Math.floor(Math.random() * bgImages.length);
-        document.body.style.backgroundImage = `url(${bgFolderName}/${bgImages[randomIndex]})`;
-      });
+        // Determine the maximum number of characters in a line
+        let maxLineLength = 0;
+        for (let k = 0; k < textArray.length; k++) {
+          if (textArray[k].length > maxLineLength) {
+            maxLineLength = textArray[k].length;
+          }
+        }
+
+        // Set the font size based on the maximum line length
+        let fontSize = Math.floor(window.innerWidth / maxLineLength);
+        textInput.style.fontSize = fontSize + "px";
+
+        function typeWriter() {
+          if (i < textArray.length) {
+            if (j < textArray[i].length) {
+              textInput.innerHTML += textArray[i].charAt(j);
+              j++;
+              typeSound.currentTime = 0;
+              typeSound.play();
+              setTimeout(typeWriter, 100);
+            } else {
+              textInput.innerHTML += "<br>";
+              i++;
+              j = 0;
+              textInput.scrollTop = textInput.scrollHeight;
+              setTimeout(typeWriter, 500);
+            }
+          } else {
+            isTyping = false;
+          }
+        }
+
+        textInput.innerHTML += "<div><b>" + textArray[0] + "</b></div>";
+        textInput.innerHTML += "<div><b>" + textArray[1] + "</b></div>";
+        textInput.innerHTML += "<div><b>" + textArray[2] + "</b></div>";
+        i = 3;
+        typeWriter();
+
+        document.addEventListener("keydown", function(event) {
+          if (isTyping) {
+            event.preventDefault();
+          }
+        });
+
+        // Randomly select background image based on the last digit of current time
+        const currentTime = new Date().getSeconds() % 10;
+        const bgFolder = "bg" + currentTime;
+        const bgImages = getImagesFromFolder(bgFolder);
+        const randomBgImage = getRandomImage(bgImages);
+        document.body.style.backgroundImage = `url(${randomBgImage})`;
+
+        // Randomly select font based on the last digit of current time
+        const ftFolder = "ft" + currentTime;
+        const ftFonts = getFontsFromFolder(ftFolder);
+        const randomFont = getRandomFont(ftFonts);
+        textInput.style.fontFamily = randomFont;
+      }
+    };
+    xhr.send();
+
+    function getImagesFromFolder(folderName) {
+      const images = [];
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", folderName);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          const fileList = xhr.responseText.split("\n");
+          for (let i = 0; i < fileList.length; i++) {
+            if (fileList[i].match(/\.(jpeg|jpg|gif|png)$/)) {
+              images.push(folderName + "/" + fileList[i]);
+            }
+          }
+        }
+      };
+      xhr.send();
+      return images;
+    }
+
+    function getRandomImage(images) {
+      return images[Math.floor(Math.random() * images.length)];
+    }
+
+    function getFontsFromFolder(folderName) {
+      const fonts = [];
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", folderName);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          const fileList = xhr.responseText.split("\n");
+          for (let i = 0; i < fileList.length; i++) {
+            if (fileList[i].match(/\.(ttf|otf|woff|woff2)$/)) {
+              fonts.push(folderName + "/" + fileList[i]);
+            }
+          }
+        }
+      };
+      xhr.send();
+      return fonts;
+    }
+
+    function getRandomFont(fonts) {
+      return fonts[Math.floor(Math.random() * fonts.length)];
+    }
   </script>
 </body>
 </html>
