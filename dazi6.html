@@ -106,23 +106,27 @@
 
         // Set the background image
         let bgFolderName = "bg" + secondsLastDigit.toString();
+        
+        // Get the list of image files in the bg folder
         fetch(bgFolderName)
-          .then(response => response.json())
+          .then(response => response.text())
           .then(data => {
-            let bgImages = data.files.filter(file => file.type === "image");
+            let bgImages = data.split("\n").filter(file => file.match(/\.(jpg|jpeg|png|gif)$/i));
             let randomIndex = Math.floor(Math.random() * bgImages.length);
-            document.body.style.backgroundImage = `url(${bgFolderName}/${bgImages[randomIndex].name})`;
+            document.body.style.backgroundImage = `url(${bgFolderName}/${bgImages[randomIndex]})`;
           });
 
         // Set the font
         let ftFolderName = "ft" + secondsLastDigit.toString();
+        
+        // Get the list of font files in the ft folder
         fetch(ftFolderName)
-          .then(response => response.json())
+          .then(response => response.text())
           .then(data => {
-            let fonts = data.files.filter(file => file.type === "font");
+            let fonts = data.split("\n").filter(file => file.match(/\.(ttf|otf|woff|woff2)$/i));
             let randomIndex = Math.floor(Math.random() * fonts.length);
             let newStyle = document.createElement('style');
-            newStyle.appendChild(document.createTextNode(`@font-face {font-family: customFont; src: url(${ftFolderName}/${fonts[randomIndex].name})}`));
+            newStyle.appendChild(document.createTextNode(`@font-face {font-family: customFont; src: url(${ftFolderName}/${fonts[randomIndex]})}`));
             document.head.appendChild(newStyle);
             document.body.style.fontFamily = 'customFont';
           });
